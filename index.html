@@ -16,52 +16,56 @@
     *{box-sizing:border-box;margin:0;padding:0;}
     body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:60px;}
 
-    header{background:linear-gradient(135deg,#0b1525,#160d2f);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+    /* HEADER */
+    header{background:linear-gradient(135deg,#0b1525,#160d2f);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
     .h-logo{display:flex;align-items:center;gap:12px;}
-    .h-ig{width:36px;height:36px;border-radius:10px;background:linear-gradient(45deg,#a78bfa,#f472b6);display:flex;align-items:center;justify-content:center;font-size:18px;}
-    .h-title{font-size:15px;font-weight:700;}
+    .h-ig{width:40px;height:40px;border-radius:10px;background:linear-gradient(45deg,#a78bfa,#f472b6);display:flex;align-items:center;justify-content:center;font-size:20px;}
+    .h-title{font-size:17px;font-weight:700;}
     .h-title span{background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .h-sub{font-size:11px;color:var(--sub);margin-top:2px;}
-    .badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,229,160,.08);border:1px solid var(--green);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--green);}
-    .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+    .h-sub{font-size:12px;color:var(--sub);margin-top:3px;}
+    .badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,229,160,.08);border:1px solid var(--green);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--green);}
+    .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-    /* period filter */
+    /* PERIOD FILTER */
     .pf-bar{background:#0c1828;border-bottom:1px solid var(--border);padding:10px 32px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-    .pf-lbl{font-size:11px;color:var(--sub);font-weight:600;margin-right:4px;}
-    .pf-btn{padding:5px 14px;font-size:11px;font-weight:600;color:var(--sub);background:var(--card);border:1px solid var(--border);border-radius:20px;cursor:pointer;transition:all .15s;}
+    .pf-lbl{font-size:12px;color:var(--sub);font-weight:600;margin-right:4px;}
+    .pf-btn{padding:6px 16px;font-size:12px;font-weight:600;color:var(--sub);background:var(--card);border:1px solid var(--border);border-radius:20px;cursor:pointer;transition:all .15s;}
     .pf-btn:hover{color:var(--text);border-color:var(--purple);}
     .pf-btn.active{background:rgba(167,139,250,.15);color:var(--purple);border-color:var(--purple);}
-    .pf-sep{width:1px;height:20px;background:var(--border);margin:0 4px;}
-    .pf-date{font-size:11px;color:var(--sub);background:var(--card);border:1px solid var(--border);border-radius:6px;padding:4px 8px;}
+    .pf-sep{width:1px;height:22px;background:var(--border);margin:0 4px;}
+    .pf-date{font-size:12px;color:var(--sub);background:var(--card);border:1px solid var(--border);border-radius:6px;padding:5px 10px;}
 
-    .container{max-width:1440px;margin:0 auto;padding:24px 32px;}
-    .sec-title{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 12px;}
+    /* LAYOUT */
+    .container{max-width:1440px;margin:0 auto;padding:28px 32px;}
+    .sec-title{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin:28px 0 14px;}
 
-    /* GAUGES */
-    .gauge-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
-    .gauge-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 16px 14px;display:flex;flex-direction:column;align-items:center;}
-    .gauge-title{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
-    .gauge-wrap{position:relative;width:140px;height:75px;margin-bottom:4px;}
-    .gauge-wrap canvas{position:absolute;top:0;left:0;}
-    .gauge-center{position:absolute;bottom:0;left:50%;transform:translateX(-50%);text-align:center;width:100%;}
-    .gauge-pct{font-size:20px;font-weight:800;line-height:1;}
-    .gauge-tag{font-size:9px;color:var(--sub);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:1px;}
-    .gauge-meta{display:flex;justify-content:space-between;align-items:flex-end;width:100%;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
-    .gauge-val{text-align:left;}
-    .gauge-val-n{font-size:18px;font-weight:800;}
-    .gauge-val-lbl{font-size:9px;color:var(--sub);font-weight:600;text-transform:uppercase;}
-    .gauge-meta-n{text-align:right;}
-    .gauge-meta-n span{font-size:13px;font-weight:700;color:var(--sub);}
-    .gauge-meta-n small{display:block;font-size:9px;color:var(--sub2);text-transform:uppercase;}
-    .gauge-check{font-size:18px;align-self:center;}
+    /* ── GAUGES ── */
+    .gauge-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+    .gauge-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 20px 18px;display:flex;flex-direction:column;align-items:center;}
+    .gauge-title{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:12px;}
+
+    /* semi-circle wrap — canvas fills it entirely */
+    .gauge-wrap{position:relative;width:100%;max-width:240px;padding-top:50%;margin-bottom:6px;}
+    .gauge-wrap canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important;}
+    .gauge-center{position:absolute;bottom:0;left:50%;transform:translateX(-50%);text-align:center;width:100%;padding-bottom:4px;}
+    .gauge-pct{font-size:30px;font-weight:800;line-height:1;letter-spacing:-1px;}
+    .gauge-tag{font-size:10px;color:var(--sub);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-top:2px;}
+
+    .gauge-footer{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+    .gauge-val-n{font-size:22px;font-weight:800;}
+    .gauge-val-lbl{font-size:10px;color:var(--sub);font-weight:600;text-transform:uppercase;margin-top:2px;}
+    .gauge-check{font-size:22px;}
+    .gauge-meta-txt{text-align:right;}
+    .gauge-meta-txt span{font-size:15px;font-weight:700;color:var(--sub);}
+    .gauge-meta-txt small{display:block;font-size:10px;color:var(--sub2);text-transform:uppercase;margin-top:2px;}
 
     /* KPI CARDS */
-    .kpi-row{display:flex;gap:10px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;}
-    .kpi{flex:1;min-width:120px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
-    .kpi-lbl{font-size:10px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
-    .kpi-val{font-size:22px;font-weight:800;line-height:1.1;}
-    .kpi-note{font-size:10px;color:var(--sub);margin-top:4px;}
+    .kpi-row{display:flex;gap:12px;margin-bottom:24px;overflow-x:auto;padding-bottom:4px;}
+    .kpi{flex:1;min-width:130px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+    .kpi-lbl{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
+    .kpi-val{font-size:26px;font-weight:800;line-height:1.1;}
+    .kpi-note{font-size:11px;color:var(--sub);margin-top:5px;}
     .k-purple{border-top:2px solid var(--purple);} .k-cyan{border-top:2px solid var(--cyan);}
     .k-green{border-top:2px solid var(--green);} .k-orange{border-top:2px solid var(--orange);}
     .k-pink{border-top:2px solid var(--pink);} .k-yellow{border-top:2px solid var(--yellow);}
@@ -69,43 +73,43 @@
     .cv{color:var(--purple);} .cc{color:var(--cyan);} .cg{color:var(--green);}
     .co{color:var(--orange);} .cp{color:var(--pink);} .cy{color:var(--yellow);} .cb{color:var(--blue);}
 
-    /* visao geral bar */
-    .vg-bar{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 16px;margin-bottom:16px;font-size:11px;color:var(--sub);}
+    .vg-bar{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 18px;margin-bottom:18px;font-size:12px;color:var(--sub);}
     .vg-bar strong{color:var(--text);}
 
     /* CHARTS */
     .chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
     .chart-row.w70{grid-template-columns:3fr 2fr;}
-    .chart-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;}
-    .chart-box-ttl{font-size:13px;font-weight:700;margin-bottom:2px;}
-    .chart-box-sub{font-size:11px;color:var(--sub);margin-bottom:16px;}
-    .cw{position:relative;} .h260{height:260px;} .h280{height:280px;}
+    .chart-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;}
+    .chart-box-ttl{font-size:14px;font-weight:700;margin-bottom:3px;}
+    .chart-box-sub{font-size:12px;color:var(--sub);margin-bottom:18px;}
+    .cw{position:relative;} .h280{height:280px;} .h260{height:260px;}
 
-    /* resumo */
-    .resumo-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;}
-    .resumo-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+    /* RESUMO */
+    .resumo-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;display:flex;flex-direction:column;justify-content:center;}
+    .resumo-item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);}
     .resumo-item:last-child{border-bottom:none;}
-    .resumo-lbl{font-size:11px;color:var(--sub);font-weight:600;}
-    .resumo-val{font-size:16px;font-weight:800;}
+    .resumo-lbl{font-size:12px;color:var(--sub);font-weight:600;}
+    .resumo-val{font-size:20px;font-weight:800;}
 
     /* TABLE */
-    .tbl-box{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px;}
-    .tbl-head{background:var(--card2);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
-    .tbl-head-title{font-size:12px;font-weight:700;}
+    .tbl-box{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px;}
+    .tbl-head{background:var(--card2);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;}
+    .tbl-head-title{font-size:13px;font-weight:700;}
     .tbl-scroll{overflow-x:auto;}
     table{width:100%;border-collapse:collapse;}
-    th{background:var(--card2);font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;padding:9px 14px;text-align:left;white-space:nowrap;}
-    td{padding:9px 14px;font-size:12px;border-top:1px solid var(--border);white-space:nowrap;}
+    th{background:var(--card2);font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;padding:10px 16px;text-align:left;white-space:nowrap;}
+    td{padding:11px 16px;font-size:13px;border-top:1px solid var(--border);white-space:nowrap;}
     tr:hover td{background:rgba(255,255,255,.025);}
     .tr{text-align:right;}
-    .lnk{color:var(--cyan);font-size:11px;text-decoration:none;}
+    .lnk{color:var(--cyan);font-size:12px;text-decoration:none;}
     .lnk:hover{text-decoration:underline;}
     .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
-    .pill-q{background:rgba(167,139,250,.1);color:var(--purple);}
-    .pill-f{background:rgba(0,198,255,.1);color:var(--cyan);}
-    .pill-v{background:rgba(249,115,22,.1);color:var(--orange);}
+    .pill-q{background:rgba(167,139,250,.15);color:var(--purple);}
+    .pill-f{background:rgba(0,198,255,.15);color:var(--cyan);}
+    .pill-v{background:rgba(249,115,22,.15);color:var(--orange);}
+    .pill-i{background:rgba(0,229,160,.15);color:var(--green);}
 
-    @media(max-width:900px){
+    @media(max-width:1000px){
       .gauge-row{grid-template-columns:repeat(2,1fr);}
       .chart-row,.chart-row.w70{grid-template-columns:1fr;}
     }
@@ -138,66 +142,75 @@
 
   <p class="sec-title">Progresso de Leads</p>
   <div class="gauge-row">
+
     <div class="gauge-card">
       <div class="gauge-title">Geral</div>
-      <div class="gauge-wrap"><canvas id="g-geral"></canvas>
+      <div class="gauge-wrap">
+        <canvas id="g-geral"></canvas>
         <div class="gauge-center">
           <div class="gauge-pct cv" id="gp-geral">0%</div>
           <div class="gauge-tag">atingido</div>
         </div>
       </div>
-      <div class="gauge-meta">
-        <div class="gauge-val"><div class="gauge-val-n cv" id="gn-geral">0</div><div class="gauge-val-lbl">Total</div></div>
+      <div class="gauge-footer">
+        <div><div class="gauge-val-n cv" id="gn-geral">0</div><div class="gauge-val-lbl">Total</div></div>
         <div class="gauge-check" id="gc-geral"></div>
-        <div class="gauge-meta-n"><span id="gm-geral">3.000</span><small>Meta</small></div>
+        <div class="gauge-meta-txt"><span id="gm-geral">3.000</span><small>Meta</small></div>
       </div>
     </div>
+
     <div class="gauge-card">
       <div class="gauge-title">Captação Ads</div>
-      <div class="gauge-wrap"><canvas id="g-ads"></canvas>
+      <div class="gauge-wrap">
+        <canvas id="g-ads"></canvas>
         <div class="gauge-center">
           <div class="gauge-pct co" id="gp-ads">0%</div>
           <div class="gauge-tag">atingido</div>
         </div>
       </div>
-      <div class="gauge-meta">
-        <div class="gauge-val"><div class="gauge-val-n co" id="gn-ads">0</div><div class="gauge-val-lbl">Leads Ads</div></div>
+      <div class="gauge-footer">
+        <div><div class="gauge-val-n co" id="gn-ads">0</div><div class="gauge-val-lbl">Leads Ads</div></div>
         <div class="gauge-check" id="gc-ads"></div>
-        <div class="gauge-meta-n"><span>1.800</span><small>Meta</small></div>
+        <div class="gauge-meta-txt"><span>1.800</span><small>Meta</small></div>
       </div>
     </div>
+
     <div class="gauge-card">
       <div class="gauge-title">Captação Org</div>
-      <div class="gauge-wrap"><canvas id="g-org"></canvas>
+      <div class="gauge-wrap">
+        <canvas id="g-org"></canvas>
         <div class="gauge-center">
           <div class="gauge-pct cg" id="gp-org">0%</div>
           <div class="gauge-tag">atingido</div>
         </div>
       </div>
-      <div class="gauge-meta">
-        <div class="gauge-val"><div class="gauge-val-n cg" id="gn-org">0</div><div class="gauge-val-lbl">Leads Org</div></div>
+      <div class="gauge-footer">
+        <div><div class="gauge-val-n cg" id="gn-org">0</div><div class="gauge-val-lbl">Leads Org</div></div>
         <div class="gauge-check" id="gc-org"></div>
-        <div class="gauge-meta-n"><span>1.200</span><small>Meta</small></div>
+        <div class="gauge-meta-txt"><span>1.200</span><small>Meta</small></div>
       </div>
     </div>
+
     <div class="gauge-card">
       <div class="gauge-title">Orçamento</div>
-      <div class="gauge-wrap"><canvas id="g-verb"></canvas>
+      <div class="gauge-wrap">
+        <canvas id="g-verb"></canvas>
         <div class="gauge-center">
           <div class="gauge-pct cy" id="gp-verb">0%</div>
           <div class="gauge-tag">utilizado</div>
         </div>
       </div>
-      <div class="gauge-meta">
-        <div class="gauge-val"><div class="gauge-val-n cy" id="gn-verb">R$ 0</div><div class="gauge-val-lbl">Investido</div></div>
+      <div class="gauge-footer">
+        <div><div class="gauge-val-n cy" id="gn-verb">R$ 0</div><div class="gauge-val-lbl">Investido</div></div>
         <div class="gauge-check" id="gc-verb"></div>
-        <div class="gauge-meta-n"><span>R$ 2.700</span><small>Verba</small></div>
+        <div class="gauge-meta-txt"><span>R$ 2.700</span><small>Verba</small></div>
       </div>
     </div>
+
   </div>
 
   <p class="sec-title">Visão Geral</p>
-  <div class="vg-bar" id="vg-bar">Campanha · CDA Léo Barbosa · Captação</div>
+  <div class="vg-bar" id="vg-bar"><strong>Campanha CDA · Léo Barbosa</strong> · Captação</div>
   <div class="kpi-row">
     <div class="kpi k-orange"><p class="kpi-lbl">Investido</p><p class="kpi-val co" id="k-inv">—</p><p class="kpi-note" id="k-inv-note">total do período</p></div>
     <div class="kpi k-yellow"><p class="kpi-lbl">Cliques</p><p class="kpi-val cy" id="k-clk">—</p><p class="kpi-note" id="k-cpc-note">CPC —</p></div>
@@ -217,7 +230,7 @@
     </div>
     <div class="chart-box">
       <p class="chart-box-ttl">Leads Orgânicos por Dia</p>
-      <p class="chart-box-sub">Org = captação orgânica</p>
+      <p class="chart-box-sub">Captação orgânica diária</p>
       <div class="cw h280"><canvas id="c-org"></canvas></div>
     </div>
   </div>
@@ -230,23 +243,11 @@
       <div class="cw h260"><canvas id="c-qual"></canvas></div>
     </div>
     <div class="resumo-box">
-      <p class="chart-box-ttl" style="margin-bottom:14px">Resumo do Período</p>
-      <div class="resumo-item">
-        <span class="resumo-lbl">CPL Médio</span>
-        <span class="resumo-val cp" id="r-cpl">—</span>
-      </div>
-      <div class="resumo-item">
-        <span class="resumo-lbl">CTR Médio</span>
-        <span class="resumo-val cg" id="r-ctr">—</span>
-      </div>
-      <div class="resumo-item">
-        <span class="resumo-lbl">CPM Médio</span>
-        <span class="resumo-val cc" id="r-cpm">—</span>
-      </div>
-      <div class="resumo-item">
-        <span class="resumo-lbl">Conv. Rate Médio</span>
-        <span class="resumo-val cy" id="r-cvr">—</span>
-      </div>
+      <p class="chart-box-ttl" style="margin-bottom:6px">Resumo do Período</p>
+      <div class="resumo-item"><span class="resumo-lbl">CPL Médio</span><span class="resumo-val cp" id="r-cpl">—</span></div>
+      <div class="resumo-item"><span class="resumo-lbl">CTR Médio</span><span class="resumo-val cg" id="r-ctr">—</span></div>
+      <div class="resumo-item"><span class="resumo-lbl">CPM Médio</span><span class="resumo-val cc" id="r-cpm">—</span></div>
+      <div class="resumo-item"><span class="resumo-lbl">Conv. Rate Médio</span><span class="resumo-val cy" id="r-cvr">—</span></div>
     </div>
   </div>
 
@@ -254,21 +255,15 @@
   <div class="tbl-box">
     <div class="tbl-head">
       <span class="tbl-head-title">Todos os Criativos · Período Selecionado</span>
-      <span style="font-size:10px;color:var(--sub)" id="tbl-period">—</span>
+      <span style="font-size:11px;color:var(--sub)" id="tbl-period">—</span>
     </div>
     <div class="tbl-scroll">
       <table>
         <thead><tr>
-          <th>Criativo</th>
-          <th>Público</th>
-          <th>Campanha</th>
-          <th class="tr">Investido</th>
-          <th class="tr">Impressões</th>
-          <th class="tr">Cliques</th>
-          <th class="tr">CTR</th>
-          <th class="tr">Leads</th>
-          <th class="tr">CPL</th>
-          <th>Anúncio</th>
+          <th>Criativo</th><th>Público</th><th>Campanha</th>
+          <th class="tr">Investido</th><th class="tr">Impressões</th>
+          <th class="tr">Cliques</th><th class="tr">CTR</th>
+          <th class="tr">Leads</th><th class="tr">CPL</th><th>Anúncio</th>
         </tr></thead>
         <tbody id="c-tbody"></tbody>
       </table>
@@ -279,29 +274,20 @@
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const ADS_ID   = '1uSyHTXWefAnPdBxRD1yMgK0wMJJNms8SlRB3EzDD86o';
-const GVT_ADS  = `https://docs.google.com/spreadsheets/d/${ADS_ID}/gviz/tq?tqx=out:csv&gid=0`;
-const GVT_ORG  = `https://docs.google.com/spreadsheets/d/${ADS_ID}/gviz/tq?tqx=out:csv&gid=1704118724`;
-
-const META_GERAL = 3000;
-const META_ADS   = 1800;
-const META_ORG   = 1200;
-const VERBA      = 2700;
+const ADS_ID  = '1uSyHTXWefAnPdBxRD1yMgK0wMJJNms8SlRB3EzDD86o';
+const GVT_ADS = `https://docs.google.com/spreadsheets/d/${ADS_ID}/gviz/tq?tqx=out:csv&gid=0`;
+const GVT_ORG = `https://docs.google.com/spreadsheets/d/${ADS_ID}/gviz/tq?tqx=out:csv&gid=1704118724`;
+const META_GERAL=3000, META_ADS=1800, META_ORG=1200, VERBA=2700;
 
 // ── UTILS ─────────────────────────────────────────────────────
-const C = {cyan:'#00c6ff',green:'#00e5a0',yellow:'#ffd166',red:'#ff6b6b',purple:'#a78bfa',orange:'#f97316',pink:'#f472b6',blue:'#60a5fa',grid:'rgba(30,48,69,0.7)'};
-const ch = {};
-const R  = id => document.getElementById(id);
-const fmtN   = n => n>=1e6?(n/1e6).toFixed(1)+'M':n>=1000?(n/1000).toFixed(1)+'k':String(Math.round(n)||0);
-const fmtR   = v => 'R$ '+(+v||0).toFixed(2).replace('.',',');
-const fmtPct = v => (+v||0).toFixed(2).replace('.',',')+'%';
-const money  = s => {
-  let v=(s||'').replace(/R\$\s?/g,'').replace(/\s/g,'').trim();
-  if(v.includes(',')&&v.includes('.'))v=v.replace(/\./g,'').replace(',','.');
-  else if(v.includes(','))v=v.replace(',','.');
-  return parseFloat(v)||0;
-};
-const mkChart = (id,cfg) => {if(ch[id])ch[id].destroy();ch[id]=new Chart(R(id),cfg);};
+const C={cyan:'#00c6ff',green:'#00e5a0',yellow:'#ffd166',red:'#ff6b6b',purple:'#a78bfa',orange:'#f97316',pink:'#f472b6',blue:'#60a5fa',grid:'rgba(30,48,69,0.7)'};
+const ch={};
+const R=id=>document.getElementById(id);
+const fmtN=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1000?(n/1000).toFixed(1)+'k':String(Math.round(n)||0);
+const fmtR=v=>'R$ '+(+v||0).toFixed(2).replace('.',',');
+const fmtPct=v=>(+v||0).toFixed(2).replace('.',',')+'%';
+const money=s=>{let v=(s||'').replace(/R\$\s?/g,'').replace(/\s/g,'').trim();if(v.includes(',')&&v.includes('.'))v=v.replace(/\./g,'').replace(',','.');else if(v.includes(','))v=v.replace(',','.');return parseFloat(v)||0;};
+const mkChart=(id,cfg)=>{if(ch[id])ch[id].destroy();ch[id]=new Chart(R(id),cfg);};
 
 function csvLine(l){const r=[];let c='',q=false;for(const x of l){if(x==='"'){q=!q;}else if(x===','&&!q){r.push(c);c='';}else c+=x;}r.push(c);return r;}
 function parseCSV(txt){
@@ -313,175 +299,150 @@ function parseCSV(txt){
     return hs.reduce((o,h,i)=>{o[h]=v[i]||'';return o;},{});
   });
 }
-
-// parse DD/MM/YYYY → Date
-function parseDate(s){
-  if(!s)return null;
-  const p=s.trim().split('/');
-  if(p.length===3)return new Date(+p[2],+p[1]-1,+p[0]);
-  return null;
-}
+function parseDate(s){if(!s)return null;const p=s.trim().split('/');if(p.length===3)return new Date(+p[2],+p[1]-1,+p[0]);return null;}
 function fmtShort(d){if(!d)return'—';return`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;}
 
-// ── PERIOD STATE ──────────────────────────────────────────────
-let _allAds=[], _allOrg=[], _activeDays='all';
+// ── GAUGE ─────────────────────────────────────────────────────
+function drawGauge(id,value,max,color){
+  const pct=Math.min(Math.max(value/max,0),1);
+  mkChart(id,{type:'doughnut',data:{datasets:[{
+    data:[pct,1-pct],
+    backgroundColor:[pct>=1?C.green:color,'#1e3045'],
+    borderWidth:0,circumference:180,rotation:-90,
+  }]},options:{cutout:'65%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:900},events:[]}});
+}
 
-window.setPeriod = function(days, btn){
+function updateGauge(prefix,value,max,color,fmtVal){
+  const pct=value/max*100;
+  drawGauge('g-'+prefix,value,max,color);
+  R('gp-'+prefix).textContent=pct.toFixed(1).replace('.',',')+'%';
+  R('gp-'+prefix).style.color=pct>=100?C.green:color;
+  R('gn-'+prefix).textContent=fmtVal;
+  R('gc-'+prefix).textContent=pct>=100?'🏆':'';
+}
+
+// ── PERIOD ────────────────────────────────────────────────────
+let _allAds=[],_allOrg=[],_activeDays='all';
+
+window.setPeriod=function(days,btn){
   document.querySelectorAll('.pf-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  _activeDays = days;
+  _activeDays=days;
   renderAll();
 };
 
-function filterByPeriod(rows, dateKey){
+function filterByPeriod(rows,dateKey){
   if(_activeDays==='all')return rows;
-  const cutoff=new Date(); cutoff.setDate(cutoff.getDate()-_activeDays);
+  const cutoff=new Date();cutoff.setHours(0,0,0,0);cutoff.setDate(cutoff.getDate()-_activeDays+1);
   return rows.filter(r=>{const d=parseDate(r[dateKey]);return d&&d>=cutoff;});
 }
 
-// ── GAUGE ─────────────────────────────────────────────────────
-function drawGauge(id, value, max, color){
-  const pct = Math.min(value/max, 1);
-  const empty = 1 - pct;
-  mkChart(id,{type:'doughnut',data:{datasets:[{
-    data:[pct, empty],
-    backgroundColor:[color,'#1e3045'],
-    borderWidth:0,
-    circumference:180,
-    rotation:-90,
-  }]},options:{cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:800}}});
-}
-
-function updateGauge(prefix, value, max, color, fmtVal, metaStr){
-  const pct = value/max*100;
-  drawGauge('g-'+prefix, value, max, pct>=100?C.green:color);
-  R('gp-'+prefix).textContent = pct.toFixed(1).replace('.',',')+'%';
-  R('gp-'+prefix).style.color = pct>=100?C.green:color;
-  R('gn-'+prefix).textContent = fmtVal;
-  R('gc-'+prefix).textContent = pct>=100?'🏆':'';
-}
-
-// ── MAIN RENDER ───────────────────────────────────────────────
+// ── RENDER ────────────────────────────────────────────────────
 function renderAll(){
-  const ads = filterByPeriod(_allAds,'Date');
-  const org  = filterByPeriod(_allOrg,'Data');
-
-  if(!ads.length&&!org.length){
-    R('h-sub').textContent='Aguardando dados da campanha';
-    return;
-  }
+  const ads=filterByPeriod(_allAds,'Date');
+  const org=filterByPeriod(_allOrg,'Data');
 
   // aggregates
-  let totInv=0, totImp=0, totClk=0, totLeads=0, totVlp=0;
+  let totInv=0,totImp=0,totClk=0,totLeads=0;
   ads.forEach(r=>{
-    totInv   += money(r['Investido']);
-    totImp   += parseInt(r['Impressoes'])||0;
-    totClk   += parseInt(r['Cliques'])||0;
-    totLeads += parseInt(r['Leads'])||0;
-    totVlp   += parseInt(r['Visualizacoes_LP ']||r['Visualizacoes_LP'])||0;
+    totInv+=money(r['Investido']);
+    totImp+=parseInt(r['Impressoes'])||0;
+    totClk+=parseInt(r['Cliques'])||0;
+    totLeads+=parseInt(r['Leads'])||0;
   });
-  let totOrgLeads=0;
-  org.forEach(r=>{
-    totOrgLeads += (parseInt(r['Leads Captação Ads'])||0) + (parseInt(r['Leads Captação Org'])||0);
-  });
-  // Use leads from ads sheet as primary
-  const totGeral = totLeads + (org.reduce((a,r)=>a+(parseInt(r['Leads Captação Org'])||0),0));
-  const orgLeads  = org.reduce((a,r)=>a+(parseInt(r['Leads Captação Org'])||0),0);
+  const orgLeads=org.reduce((a,r)=>a+(parseInt(r['Leads Captação Org'])||0),0);
 
-  const cpl = totLeads>0?totInv/totLeads:0;
-  const cpc = totClk>0?totInv/totClk:0;
-  const cpm = totImp>0?totInv/totImp*1000:0;
-  const ctr = totImp>0?totClk/totImp*100:0;
-  const cvr = totClk>0?totLeads/totClk*100:0;
+  const cpl=totLeads>0?totInv/totLeads:0;
+  const cpc=totClk>0?totInv/totClk:0;
+  const cpm=totImp>0?totInv/totImp*1000:0;
+  const ctr=totImp>0?totClk/totImp*100:0;
+  const cvr=totClk>0?totLeads/totClk*100:0;
 
   // KPIs
-  R('k-inv').textContent    = fmtR(totInv);
-  R('k-inv-note').textContent = `de ${fmtR(VERBA)} total`;
-  R('k-clk').textContent    = fmtN(totClk);
-  R('k-cpc-note').textContent = totClk>0?'CPC '+fmtR(cpc):'CPC —';
-  R('k-cpc').textContent    = totClk>0?fmtR(cpc):'—';
-  R('k-imp').textContent    = fmtN(totImp);
-  R('k-cpm-note').textContent = totImp>0?'CPM '+fmtR(cpm):'CPM —';
-  R('k-ctr').textContent    = fmtPct(ctr);
-  R('k-leads').textContent  = totLeads;
-  R('k-leads-note').textContent = orgLeads>0?`+${orgLeads} orgânicos`:'captação paga';
-  R('k-cpl').textContent    = totLeads>0?fmtR(cpl):'—';
+  R('k-inv').textContent=fmtR(totInv);
+  R('k-inv-note').textContent=`de ${fmtR(VERBA)} total`;
+  R('k-clk').textContent=fmtN(totClk);
+  R('k-cpc-note').textContent=totClk>0?'CPC '+fmtR(cpc):'CPC —';
+  R('k-cpc').textContent=totClk>0?fmtR(cpc):'—';
+  R('k-imp').textContent=fmtN(totImp);
+  R('k-cpm-note').textContent=totImp>0?'CPM '+fmtR(cpm):'CPM —';
+  R('k-ctr').textContent=fmtPct(ctr);
+  R('k-leads').textContent=totLeads;
+  R('k-leads-note').textContent=orgLeads>0?`+${orgLeads} orgânicos`:'captação paga';
+  R('k-cpl').textContent=totLeads>0?fmtR(cpl):'—';
 
   // Gauges
-  updateGauge('geral', totLeads+orgLeads, META_GERAL, C.purple, String(totLeads+orgLeads));
-  updateGauge('ads',   totLeads,  META_ADS,  C.orange, String(totLeads));
-  updateGauge('org',   orgLeads,  META_ORG,  C.green,  String(orgLeads));
-  updateGauge('verb',  totInv,    VERBA,     C.yellow, fmtR(totInv));
+  updateGauge('geral',totLeads+orgLeads,META_GERAL,C.purple,String(totLeads+orgLeads));
+  updateGauge('ads',totLeads,META_ADS,C.orange,String(totLeads));
+  updateGauge('org',orgLeads,META_ORG,C.green,String(orgLeads));
+  updateGauge('verb',totInv,VERBA,C.yellow,fmtR(totInv));
 
   // Resumo
-  R('r-cpl').textContent = totLeads>0?fmtR(cpl):'—';
-  R('r-ctr').textContent = fmtPct(ctr);
-  R('r-cpm').textContent = totImp>0?fmtR(cpm):'—';
-  R('r-cvr').textContent = fmtPct(cvr);
+  R('r-cpl').textContent=totLeads>0?fmtR(cpl):'—';
+  R('r-ctr').textContent=fmtPct(ctr);
+  R('r-cpm').textContent=totImp>0?fmtR(cpm):'—';
+  R('r-cvr').textContent=fmtPct(cvr);
 
-  // --- Daily aggregation ---
-  const byDay = {};
+  // Daily aggregation por data
+  const byDay={};
   ads.forEach(r=>{
-    const d=r['Date']||'';
-    if(!d)return;
-    if(!byDay[d])byDay[d]={inv:0,imp:0,clk:0,leads:0,vlp:0};
-    byDay[d].inv   += money(r['Investido']);
-    byDay[d].imp   += parseInt(r['Impressoes'])||0;
-    byDay[d].clk   += parseInt(r['Cliques'])||0;
-    byDay[d].leads += parseInt(r['Leads'])||0;
-    byDay[d].vlp   += parseInt(r['Visualizacoes_LP ']||r['Visualizacoes_LP'])||0;
+    const d=r['Date']||'';if(!d)return;
+    if(!byDay[d])byDay[d]={inv:0,imp:0,clk:0,leads:0};
+    byDay[d].inv+=money(r['Investido']);
+    byDay[d].imp+=parseInt(r['Impressoes'])||0;
+    byDay[d].clk+=parseInt(r['Cliques'])||0;
+    byDay[d].leads+=parseInt(r['Leads'])||0;
   });
-  const orgByDay = {};
+  const orgByDay={};
   org.forEach(r=>{
-    const d=r['Data']||'';
-    if(!d)return;
-    const key=d.split('/').slice(0,2).join('/'); // DD/MM
+    const raw=r['Data']||'';if(!raw)return;
+    const p=raw.split('/');const key=`${p[0]}/${p[1]}`;
     orgByDay[key]=(orgByDay[key]||0)+(parseInt(r['Leads Captação Org'])||0);
   });
 
-  const days = Object.keys(byDay).sort((a,b)=>parseDate(a)-parseDate(b));
-  const labels = days.map(d=>d.split('/').slice(0,2).join('/'));
-  const leadsArr = days.map(d=>byDay[d].leads);
-  const cplArr   = days.map(d=>byDay[d].leads>0?+(byDay[d].inv/byDay[d].leads).toFixed(2):null);
-  const cpmArr   = days.map(d=>byDay[d].imp>0?+(byDay[d].inv/byDay[d].imp*1000).toFixed(2):null);
-  const ctrArr   = days.map(d=>byDay[d].imp>0?+(byDay[d].clk/byDay[d].imp*100).toFixed(2):null);
-  const cvrArr   = days.map(d=>byDay[d].clk>0?+(byDay[d].leads/byDay[d].clk*100).toFixed(2):null);
-  const orgArr   = days.map(d=>orgByDay[labels[days.indexOf(d)]]||null);
+  const days=Object.keys(byDay).sort((a,b)=>parseDate(a)-parseDate(b));
+  const labels=days.map(d=>{const p=d.split('/');return`${p[0]}/${p[1]}`;});
+  const leadsArr=days.map(d=>byDay[d].leads);
+  const cplArr=days.map(d=>byDay[d].leads>0?+(byDay[d].inv/byDay[d].leads).toFixed(2):null);
+  const cpmArr=days.map(d=>byDay[d].imp>0?+(byDay[d].inv/byDay[d].imp*1000).toFixed(2):null);
+  const ctrArr=days.map(d=>byDay[d].imp>0?+(byDay[d].clk/byDay[d].imp*100).toFixed(2):null);
+  const cvrArr=days.map(d=>byDay[d].clk>0?+(byDay[d].leads/byDay[d].clk*100).toFixed(2):null);
+  const orgArr=days.map((_,i)=>orgByDay[labels[i]]||null);
 
-  // period label
+  // labels / range
   if(days.length>0){
-    const d1=parseDate(days[0]), d2=parseDate(days[days.length-1]);
+    const d1=parseDate(days[0]),d2=parseDate(days[days.length-1]);
     const range=`${fmtShort(d1)} – ${fmtShort(d2)}`;
     R('pf-range').textContent=range;
     R('tbl-period').textContent=range;
     const hora=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     R('h-sub').textContent=`${range} · Atualizado às ${hora}`;
+    R('vg-bar').innerHTML=`<strong>Campanha CDA · Léo Barbosa</strong> · Início: ${days[0]} · ${days.length} ${days.length===1?'dia':'dias'} de dados`;
   }
-  R('vg-bar').innerHTML=`<strong>Campanha CDA · Léo Barbosa</strong> · Início: ${days[0]||'—'} · ${days.length} ${days.length===1?'dia':'dias'} de dados`;
 
-  const lineOpts=(color,dash=[])=>({borderColor:color,backgroundColor:'transparent',pointBackgroundColor:color,pointRadius:3,pointHoverRadius:5,borderWidth:2,borderDash:dash,tension:.3,fill:false,spanGaps:true});
+  const lineOpts=(color,dash=[])=>({borderColor:color,backgroundColor:'transparent',pointBackgroundColor:color,pointRadius:4,pointHoverRadius:6,borderWidth:2,borderDash:dash,tension:.35,fill:false,spanGaps:true});
 
-  // Gráfico 1 — Leads + CPL
+  // Gráfico 1 — Leads + CPL por dia
   mkChart('c-perf',{type:'bar',data:{labels,datasets:[
-    {type:'bar',label:'Leads',data:leadsArr,backgroundColor:C.purple+'bb',borderRadius:4,yAxisID:'yA'},
+    {type:'bar',label:'Leads',data:leadsArr,backgroundColor:C.purple+'cc',borderRadius:5,yAxisID:'yA',maxBarThickness:60},
     {type:'line',...lineOpts(C.pink,[4,4]),label:'CPL (R$)',data:cplArr,yAxisID:'yB'},
   ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{position:'top',labels:{boxWidth:10,padding:10,font:{size:11},usePointStyle:true}}},
+    plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12,font:{size:12},usePointStyle:true}}},
     scales:{
-      x:{grid:{color:C.grid},ticks:{maxRotation:60,font:{size:9}}},
-      yA:{position:'left',grid:{color:C.grid},ticks:{stepSize:1}},
-      yB:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>'R$'+Number(v).toFixed(2).replace('.',','),color:C.pink}},
+      x:{grid:{color:C.grid},ticks:{maxRotation:60,font:{size:10}}},
+      yA:{position:'left',grid:{color:C.grid},ticks:{stepSize:1,font:{size:11}}},
+      yB:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>'R$'+Number(v).toFixed(2).replace('.',','),color:C.pink,font:{size:11}}},
     }
   }});
 
-  // Gráfico 2 — Leads Org
+  // Gráfico 2 — Leads Org por dia
   mkChart('c-org',{type:'bar',data:{labels,datasets:[
-    {type:'bar',label:'Leads Org',data:orgArr,backgroundColor:C.green+'bb',borderRadius:4},
+    {label:'Leads Org',data:orgArr,backgroundColor:C.green+'cc',borderRadius:5,maxBarThickness:60},
   ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{position:'top',labels:{boxWidth:10,padding:10,font:{size:11},usePointStyle:true}}},
+    plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12,font:{size:12},usePointStyle:true}}},
     scales:{
-      x:{grid:{color:C.grid},ticks:{maxRotation:60,font:{size:9}}},
-      y:{grid:{color:C.grid},ticks:{stepSize:1}},
+      x:{grid:{color:C.grid},ticks:{maxRotation:60,font:{size:10}}},
+      y:{grid:{color:C.grid},ticks:{stepSize:1,font:{size:11}}},
     }
   }});
 
@@ -491,44 +452,43 @@ function renderAll(){
     {...lineOpts(C.green,[6,3]),label:'CTR (%)',data:ctrArr,yAxisID:'yB'},
     {...lineOpts(C.yellow,[4,4]),label:'Conv. Rate (%)',data:cvrArr,yAxisID:'yB'},
   ]},options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{position:'top',labels:{boxWidth:10,padding:10,font:{size:11},usePointStyle:true}}},
+    plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12,font:{size:12},usePointStyle:true}}},
     scales:{
-      x:{grid:{color:C.grid},ticks:{maxRotation:60,font:{size:9}}},
-      yA:{position:'left',grid:{color:C.grid},ticks:{callback:v=>'R$'+Number(v).toFixed(2).replace('.',',')}},
-      yB:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>v+'%',color:C.green}},
+      x:{grid:{color:C.grid},ticks:{maxRotation:60,font:{size:10}}},
+      yA:{position:'left',grid:{color:C.grid},ticks:{callback:v=>'R$'+Number(v).toFixed(2).replace('.',','),font:{size:11}}},
+      yB:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>v+'%',color:C.green,font:{size:11}}},
     }
   }});
 
-  // --- Tabela por Criativo ---
-  const byCriat = {};
+  // Tabela por criativo
+  const byCriat={};
   ads.forEach(r=>{
     const key=r['Criativo']||'—';
     if(!byCriat[key])byCriat[key]={criativo:key,publico:r['Publico'],campanha:r['Campanha'],url:r['URL'],inv:0,imp:0,clk:0,leads:0};
-    byCriat[key].inv   += money(r['Investido']);
-    byCriat[key].imp   += parseInt(r['Impressoes'])||0;
-    byCriat[key].clk   += parseInt(r['Cliques'])||0;
-    byCriat[key].leads += parseInt(r['Leads'])||0;
+    byCriat[key].inv+=money(r['Investido']);
+    byCriat[key].imp+=parseInt(r['Impressoes'])||0;
+    byCriat[key].clk+=parseInt(r['Cliques'])||0;
+    byCriat[key].leads+=parseInt(r['Leads'])||0;
   });
 
-  const criatRows = Object.values(byCriat).sort((a,b)=>b.leads-a.leads);
+  const campPill=c=>c.includes('_Q')?'<span class="pill pill-q">Q</span>':c.includes('_F')?'<span class="pill pill-f">F</span>':'';
+  const pubPill=p=>(p.includes('Video')||p.includes('VID'))?'<span class="pill pill-v">Vídeo</span>':'<span class="pill pill-i">Img</span>';
+  const cleanCriat=s=>s.replace(/^AD\d+_(IMG_|VID_)?/,'').replace(/_/g,' ');
+  const cleanCamp=s=>s.replace(/^CDA_FB\d+_/,'').replace(/_/g,' ');
 
-  const campPill = c => c.includes('_Q')?'<span class="pill pill-q">Q</span>':c.includes('_F')?'<span class="pill pill-f">F</span>':'';
-  const pubPill  = p => p.includes('Video')||p.includes('VID')?'<span class="pill pill-v">Vídeo</span>':'<span class="pill pill-q">Img</span>';
-  const cleanCriat = s => s.replace(/^AD\d+_(IMG_|VID_)?/,'').replace(/_/g,' ');
-  const cleanCamp  = s => s.replace(/^CDA_FB\d+_/,'').replace(/_/g,' ');
-
-  R('c-tbody').innerHTML = criatRows.map(r=>{
-    const ctr  = r.imp>0?r.clk/r.imp*100:0;
-    const cpl  = r.leads>0?r.inv/r.leads:0;
-    return `<tr>
+  const criatRows=Object.values(byCriat).sort((a,b)=>b.leads-a.leads);
+  R('c-tbody').innerHTML=criatRows.map(r=>{
+    const ctr=r.imp>0?r.clk/r.imp*100:0;
+    const cpl=r.leads>0?r.inv/r.leads:0;
+    return`<tr>
       <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis" title="${r.criativo}">${pubPill(r.publico)} ${cleanCriat(r.criativo)}</td>
-      <td style="color:var(--sub)">${r.publico||'—'}</td>
-      <td>${campPill(r.campanha)} ${cleanCamp(r.campanha)}</td>
+      <td style="color:var(--sub);font-size:12px">${r.publico||'—'}</td>
+      <td>${campPill(r.campanha)} <span style="font-size:12px">${cleanCamp(r.campanha)}</span></td>
       <td class="tr" style="color:var(--orange)">${fmtR(r.inv)}</td>
       <td class="tr" style="color:var(--sub)">${fmtN(r.imp)}</td>
       <td class="tr">${r.clk||'—'}</td>
       <td class="tr" style="color:${ctr>3?C.green:ctr>1?C.yellow:C.red}">${fmtPct(ctr)}</td>
-      <td class="tr" style="color:var(--purple);font-weight:700">${r.leads||'—'}</td>
+      <td class="tr" style="color:var(--purple);font-weight:700;font-size:14px">${r.leads||'—'}</td>
       <td class="tr" style="color:var(--pink)">${r.leads>0?fmtR(cpl):'—'}</td>
       <td>${r.url?`<a href="${r.url}" target="_blank" class="lnk">🔗 Ver</a>`:'—'}</td>
     </tr>`;
@@ -537,9 +497,9 @@ function renderAll(){
 
 // ── LOAD ──────────────────────────────────────────────────────
 async function load(){
-  // draw empty gauges immediately
-  [['g-geral',C.purple],['g-ads',C.orange],['g-org',C.green],['g-verb',C.yellow]].forEach(([id,c])=>{
-    drawGauge(id,0,1,c);
+  ['geral','ads','org','verb'].forEach((id,i)=>{
+    const colors=[C.purple,C.orange,C.green,C.yellow];
+    drawGauge('g-'+id,0,1,colors[i]);
   });
   const ts=Date.now();
   try{
@@ -547,8 +507,8 @@ async function load(){
       fetch(`${GVT_ADS}&_=${ts}`,{cache:'no-cache'}).then(r=>r.text()),
       fetch(`${GVT_ORG}&_=${ts}`,{cache:'no-cache'}).then(r=>r.text()),
     ]);
-    _allAds = parseCSV(adsTxt).filter(r=>r['Date']&&r['Investido']);
-    _allOrg = parseCSV(orgTxt).filter(r=>r['Data']);
+    _allAds=parseCSV(adsTxt).filter(r=>r['Date']&&r['Investido']);
+    _allOrg=parseCSV(orgTxt).filter(r=>r['Data']);
     renderAll();
   }catch(e){
     R('h-sub').textContent='⚠ Erro: '+e.message;
