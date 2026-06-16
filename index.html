@@ -93,7 +93,7 @@
     .resumo-item{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border);}
     .resumo-item:last-child{border-bottom:none;}
     .resumo-lbl{font-size:14px;color:var(--sub);font-weight:600;}
-    .resumo-val{font-size:24px;font-weight:800;}
+    .resumo-val{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.5px;text-align:right;}
 
     /* TABLE */
     .tbl-box{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px;}
@@ -242,8 +242,8 @@
   <p class="sec-title">Métricas de Qualidade</p>
   <div class="chart-row w70">
     <div class="chart-box">
-      <p class="chart-box-ttl">CPM · CTR · Conv. Rate por Dia</p>
-      <p class="chart-box-sub">Dados de qualidade das métricas</p>
+      <p class="chart-box-ttl">CPM · CTR por Dia</p>
+      <p class="chart-box-sub">CPM = custo por mil impressões · CTR = taxa de clique</p>
       <div class="cw h260"><canvas id="c-qual"></canvas></div>
     </div>
     <div class="resumo-box">
@@ -475,17 +475,16 @@ function renderAll(){
     }
   }});
 
-  // Gráfico 3 — Qualidade
+  // Gráfico 3 — Qualidade (CPM + CTR — apenas métricas diretas do ads, sem distorção da aba Leads)
   mkChart('c-qual',{type:'line',data:{labels,datasets:[
     {...lineOpts(C.cyan),label:'CPM (R$)',data:cpmArr,yAxisID:'yA'},
     {...lineOpts(C.green,[6,3]),label:'CTR (%)',data:ctrArr,yAxisID:'yB'},
-    {...lineOpts(C.yellow,[4,4]),label:'Conv. Rate (%)',data:cvrArr,yAxisID:'yB'},
   ]},options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12,font:{size:12},usePointStyle:true}}},
     scales:{
       x:{grid:{color:C.grid},ticks:{maxRotation:60,font:{size:10}}},
-      yA:{position:'left',grid:{color:C.grid},ticks:{callback:v=>'R$'+Number(v).toFixed(2).replace('.',','),font:{size:11}}},
-      yB:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>v+'%',color:C.green,font:{size:11}}},
+      yA:{position:'left',grid:{color:C.grid},ticks:{callback:v=>'R$'+Number(v).toFixed(2).replace('.',','),color:C.cyan,font:{size:11}}},
+      yB:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>v.toFixed(2)+'%',color:C.green,font:{size:11}}},
     }
   }});
 
