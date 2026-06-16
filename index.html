@@ -280,7 +280,7 @@
 // ── CONFIG ────────────────────────────────────────────────────
 const ADS_ID  = '1uSyHTXWefAnPdBxRD1yMgK0wMJJNms8SlRB3EzDD86o';
 const GVT_ADS = `https://docs.google.com/spreadsheets/d/${ADS_ID}/gviz/tq?tqx=out:csv&gid=0`;
-const GVT_ORG = `https://docs.google.com/spreadsheets/d/${ADS_ID}/gviz/tq?tqx=out:csv&gid=1704118724`;
+const GVT_LEADS = `https://docs.google.com/spreadsheets/d/${ADS_ID}/gviz/tq?tqx=out:csv&gid=1704118724`;
 const META_GERAL=3000, META_ADS=1800, META_ORG=1200, VERBA=2700;
 
 // ── UTILS ─────────────────────────────────────────────────────
@@ -304,6 +304,7 @@ function parseCSV(txt){
   });
 }
 function parseDate(s){if(!s)return null;const p=s.trim().split('/');if(p.length===3)return new Date(+p[2],+p[1]-1,+p[0]);return null;}
+function shortDate(s){if(!s)return'';const p=s.trim().split('/');return p.length>=2?`${p[0]}/${p[1]}`:''}
 function fmtShort(d){if(!d)return'—';return`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;}
 
 // ── GAUGE ─────────────────────────────────────────────────────
@@ -325,8 +326,35 @@ function updateGauge(prefix,value,max,color,fmtVal){
   R('gc-'+prefix).textContent=pct>=100?'🏆':'';
 }
 
+// ── LEADS TAB (cumulativo — igual à dash da Pati) ─────────────
+// Total leads = último valor de cada coluna
+// Daily delta = diferença entre linhas consecutivas
+let LEADS_ADS_TOTAL=0, LEADS_ORG_TOTAL=0;
+const LEADS_DAILY_ADS={}, LEADS_DAILY_ORG={};
+
+function processLeadsTab(rows){
+  LEADS_ADS_TOTAL=0; LEADS_ORG_TOTAL=0;
+  Object.keys(LEADS_DAILY_ADS).forEach(k=>delete LEADS_DAILY_ADS[k]);
+  Object.keys(LEADS_DAILY_ORG).forEach(k=>delete LEADS_DAILY_ORG[k]);
+  let pAds=0, pOrg=0;
+  rows.forEach(r=>{
+    const vals=Object.values(r);
+    const org =parseInt(r['Leads Captação Org']||r['Leads Captacao Org']||vals[1])||0;
+    const ads =parseInt(r['Leads Captação Ads']||r['Leads Captacao Ads']||vals[2])||0;
+    if(!org&&!ads) return;
+    const key=shortDate(r['Data']||'');
+    if(key){
+      LEADS_DAILY_ADS[key]=Math.max(0,ads-pAds);
+      LEADS_DAILY_ORG[key]=Math.max(0,org-pOrg);
+    }
+    pAds=ads; pOrg=org;
+    LEADS_ADS_TOTAL=ads;
+    LEADS_ORG_TOTAL=org;
+  });
+}
+
 // ── PERIOD ────────────────────────────────────────────────────
-let _allAds=[],_allOrg=[],_activeDays='all';
+let _allAds=[], _activeDays='all';
 
 window.setPeriod=function(days,btn){
   document.querySelectorAll('.pf-btn').forEach(b=>b.classList.remove('active'));
@@ -344,25 +372,40 @@ function filterByPeriod(rows,dateKey){
 // ── RENDER ────────────────────────────────────────────────────
 function renderAll(){
   const ads=filterByPeriod(_allAds,'Date');
-  const org=filterByPeriod(_allOrg,'Data');
 
-  // aggregates
-  let totInv=0,totImp=0,totClk=0,totLeads=0;
+  // Investimento + métricas de mídia vêm da aba de ads
+  let totInv=0,totImp=0,totClk=0;
   ads.forEach(r=>{
     totInv+=money(r['Investido']);
     totImp+=parseInt(r['Impressoes'])||0;
     totClk+=parseInt(r['Cliques'])||0;
-    totLeads+=parseInt(r['Leads'])||0;
   });
-  const orgLeads=org.reduce((a,r)=>a+(parseInt(r['Leads Captação Org'])||0),0);
 
-  const cpl=totLeads>0?totInv/totLeads:0;
-  const cpc=totClk>0?totInv/totClk:0;
-  const cpm=totImp>0?totInv/totImp*1000:0;
-  const ctr=totImp>0?totClk/totImp*100:0;
-  const cvr=totClk>0?totLeads/totClk*100:0;
+  // ── Daily aggregation ──
+  const byDay={};
+  ads.forEach(r=>{
+    const d=r['Date']||'';if(!d)return;
+    if(!byDay[d])byDay[d]={inv:0,imp:0,clk:0};
+    byDay[d].inv+=money(r['Investido']);
+    byDay[d].imp+=parseInt(r['Impressoes'])||0;
+    byDay[d].clk+=parseInt(r['Cliques'])||0;
+  });
 
-  // KPIs
+  const days=Object.keys(byDay).sort((a,b)=>parseDate(a)-parseDate(b));
+  const labels=days.map(d=>shortDate(d));
+
+  // Leads do período = soma dos deltas diários da aba Leads dentro do filtro
+  const filtLeadsAds=labels.reduce((s,lbl)=>s+(LEADS_DAILY_ADS[lbl]||0),0);
+  const filtLeadsOrg=labels.reduce((s,lbl)=>s+(LEADS_DAILY_ORG[lbl]||0),0);
+
+  // CPL = investimento filtrado / leads reais da aba Leads
+  const cpl  =filtLeadsAds>0?totInv/filtLeadsAds:0;
+  const cpc  =totClk>0?totInv/totClk:0;
+  const cpm  =totImp>0?totInv/totImp*1000:0;
+  const ctr  =totImp>0?totClk/totImp*100:0;
+  const cvr  =totClk>0?filtLeadsAds/totClk*100:0;
+
+  // ── KPIs ──
   R('k-inv').textContent=fmtR(totInv);
   R('k-inv-note').textContent=`de ${fmtR(VERBA)} total`;
   R('k-clk').textContent=fmtN(totClk);
@@ -371,49 +414,23 @@ function renderAll(){
   R('k-imp').textContent=fmtN(totImp);
   R('k-cpm-note').textContent=totImp>0?'CPM '+fmtR(cpm):'CPM —';
   R('k-ctr').textContent=fmtPct(ctr);
-  R('k-leads').textContent=totLeads;
-  R('k-leads-note').textContent=orgLeads>0?`+${orgLeads} orgânicos`:'captação paga';
-  R('k-cpl').textContent=totLeads>0?fmtR(cpl):'—';
+  R('k-leads').textContent=filtLeadsAds||'—';
+  R('k-leads-note').textContent=filtLeadsOrg>0?`+${filtLeadsOrg} orgânicos`:'aba Leads';
+  R('k-cpl').textContent=filtLeadsAds>0?fmtR(cpl):'—';
 
-  // Gauges
-  updateGauge('geral',totLeads+orgLeads,META_GERAL,C.purple,String(totLeads+orgLeads));
-  updateGauge('ads',totLeads,META_ADS,C.orange,String(totLeads));
-  updateGauge('org',orgLeads,META_ORG,C.green,String(orgLeads));
+  // ── Gauges — usam total acumulado da aba Leads (não filtrado por período) ──
+  updateGauge('geral',LEADS_ADS_TOTAL+LEADS_ORG_TOTAL,META_GERAL,C.purple,String(LEADS_ADS_TOTAL+LEADS_ORG_TOTAL));
+  updateGauge('ads',LEADS_ADS_TOTAL,META_ADS,C.orange,String(LEADS_ADS_TOTAL));
+  updateGauge('org',LEADS_ORG_TOTAL,META_ORG,C.green,String(LEADS_ORG_TOTAL));
   updateGauge('verb',totInv,VERBA,C.yellow,fmtR(totInv));
 
-  // Resumo
-  R('r-cpl').textContent=totLeads>0?fmtR(cpl):'—';
+  // ── Resumo ──
+  R('r-cpl').textContent=filtLeadsAds>0?fmtR(cpl):'—';
   R('r-ctr').textContent=fmtPct(ctr);
   R('r-cpm').textContent=totImp>0?fmtR(cpm):'—';
-  R('r-cvr').textContent=fmtPct(cvr);
+  R('r-cvr').textContent=filtLeadsAds>0?fmtPct(cvr):'—';
 
-  // Daily aggregation por data
-  const byDay={};
-  ads.forEach(r=>{
-    const d=r['Date']||'';if(!d)return;
-    if(!byDay[d])byDay[d]={inv:0,imp:0,clk:0,leads:0};
-    byDay[d].inv+=money(r['Investido']);
-    byDay[d].imp+=parseInt(r['Impressoes'])||0;
-    byDay[d].clk+=parseInt(r['Cliques'])||0;
-    byDay[d].leads+=parseInt(r['Leads'])||0;
-  });
-  const orgByDay={};
-  org.forEach(r=>{
-    const raw=r['Data']||'';if(!raw)return;
-    const p=raw.split('/');const key=`${p[0]}/${p[1]}`;
-    orgByDay[key]=(orgByDay[key]||0)+(parseInt(r['Leads Captação Org'])||0);
-  });
-
-  const days=Object.keys(byDay).sort((a,b)=>parseDate(a)-parseDate(b));
-  const labels=days.map(d=>{const p=d.split('/');return`${p[0]}/${p[1]}`;});
-  const leadsArr=days.map(d=>byDay[d].leads);
-  const cplArr=days.map(d=>byDay[d].leads>0?+(byDay[d].inv/byDay[d].leads).toFixed(2):null);
-  const cpmArr=days.map(d=>byDay[d].imp>0?+(byDay[d].inv/byDay[d].imp*1000).toFixed(2):null);
-  const ctrArr=days.map(d=>byDay[d].imp>0?+(byDay[d].clk/byDay[d].imp*100).toFixed(2):null);
-  const cvrArr=days.map(d=>byDay[d].clk>0?+(byDay[d].leads/byDay[d].clk*100).toFixed(2):null);
-  const orgArr=days.map((_,i)=>orgByDay[labels[i]]||null);
-
-  // labels / range
+  // ── Labels / range ──
   if(days.length>0){
     const d1=parseDate(days[0]),d2=parseDate(days[days.length-1]);
     const range=`${fmtShort(d1)} – ${fmtShort(d2)}`;
@@ -424,11 +441,19 @@ function renderAll(){
     R('vg-bar').innerHTML=`<strong>Campanha CDA · Léo Barbosa</strong> · Início: ${days[0]} · ${days.length} ${days.length===1?'dia':'dias'} de dados`;
   }
 
+  // ── Arrays para gráficos — leads da aba Leads, investimento da aba de ads ──
+  const leadsArr=labels.map(lbl=>LEADS_DAILY_ADS[lbl]||0);
+  const orgArr  =labels.map(lbl=>LEADS_DAILY_ORG[lbl]||0);
+  const cplArr  =labels.map((lbl,i)=>(LEADS_DAILY_ADS[lbl]||0)>0?+(byDay[days[i]].inv/(LEADS_DAILY_ADS[lbl])).toFixed(2):null);
+  const cpmArr  =days.map(d=>byDay[d].imp>0?+(byDay[d].inv/byDay[d].imp*1000).toFixed(2):null);
+  const ctrArr  =days.map(d=>byDay[d].imp>0?+(byDay[d].clk/byDay[d].imp*100).toFixed(2):null);
+  const cvrArr  =labels.map((lbl,i)=>byDay[days[i]].clk>0?+((LEADS_DAILY_ADS[lbl]||0)/byDay[days[i]].clk*100).toFixed(2):null);
+
   const lineOpts=(color,dash=[])=>({borderColor:color,backgroundColor:'transparent',pointBackgroundColor:color,pointRadius:4,pointHoverRadius:6,borderWidth:2,borderDash:dash,tension:.35,fill:false,spanGaps:true});
 
-  // Gráfico 1 — Leads + CPL por dia
+  // Gráfico 1 — Leads (aba Leads) + CPL por dia
   mkChart('c-perf',{type:'bar',data:{labels,datasets:[
-    {type:'bar',label:'Leads',data:leadsArr,backgroundColor:C.purple+'cc',borderRadius:5,yAxisID:'yA',maxBarThickness:60},
+    {type:'bar',label:'Leads (aba Leads)',data:leadsArr,backgroundColor:C.purple+'cc',borderRadius:5,yAxisID:'yA',maxBarThickness:60},
     {type:'line',...lineOpts(C.pink,[4,4]),label:'CPL (R$)',data:cplArr,yAxisID:'yB'},
   ]},options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12,font:{size:12},usePointStyle:true}}},
@@ -439,9 +464,9 @@ function renderAll(){
     }
   }});
 
-  // Gráfico 2 — Leads Org por dia
+  // Gráfico 2 — Leads Org (aba Leads) por dia
   mkChart('c-org',{type:'bar',data:{labels,datasets:[
-    {label:'Leads Org',data:orgArr,backgroundColor:C.green+'cc',borderRadius:5,maxBarThickness:60},
+    {label:'Leads Org (aba Leads)',data:orgArr,backgroundColor:C.green+'cc',borderRadius:5,maxBarThickness:60},
   ]},options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12,font:{size:12},usePointStyle:true}}},
     scales:{
@@ -464,15 +489,20 @@ function renderAll(){
     }
   }});
 
-  // Tabela por criativo
+  // ── Tabela por criativo — investimento e cliques da aba ads; leads escalados ──
   const byCriat={};
   ads.forEach(r=>{
     const key=r['Criativo']||'—';
-    if(!byCriat[key])byCriat[key]={criativo:key,publico:r['Publico'],campanha:r['Campanha'],url:r['URL'],inv:0,imp:0,clk:0,leads:0};
+    if(!byCriat[key])byCriat[key]={criativo:key,publico:r['Publico'],campanha:r['Campanha'],url:r['URL'],inv:0,imp:0,clk:0,leadsAds:0};
     byCriat[key].inv+=money(r['Investido']);
     byCriat[key].imp+=parseInt(r['Impressoes'])||0;
     byCriat[key].clk+=parseInt(r['Cliques'])||0;
-    byCriat[key].leads+=parseInt(r['Leads'])||0;
+    byCriat[key].leadsAds+=parseInt(r['Leads'])||0; // leads do Meta (para proporção)
+  });
+  // Escalar leads proporcionalmente ao total real da aba Leads
+  const metaTotLeads=Object.values(byCriat).reduce((s,r)=>s+r.leadsAds,0);
+  Object.values(byCriat).forEach(r=>{
+    r.leads=metaTotLeads>0&&filtLeadsAds>0?Math.round(r.leadsAds/metaTotLeads*filtLeadsAds):r.leadsAds;
   });
 
   const campPill=c=>c.includes('_Q')?'<span class="pill pill-q">Q</span>':c.includes('_F')?'<span class="pill pill-f">F</span>':'';
@@ -507,12 +537,12 @@ async function load(){
   });
   const ts=Date.now();
   try{
-    const[adsTxt,orgTxt]=await Promise.all([
+    const[adsTxt,leadsTxt]=await Promise.all([
       fetch(`${GVT_ADS}&_=${ts}`,{cache:'no-cache'}).then(r=>r.text()),
-      fetch(`${GVT_ORG}&_=${ts}`,{cache:'no-cache'}).then(r=>r.text()),
+      fetch(`${GVT_LEADS}&_=${ts}`,{cache:'no-cache'}).then(r=>r.text()),
     ]);
     _allAds=parseCSV(adsTxt).filter(r=>r['Date']&&r['Investido']);
-    _allOrg=parseCSV(orgTxt).filter(r=>r['Data']);
+    processLeadsTab(parseCSV(leadsTxt).filter(r=>r['Data']));
     renderAll();
   }catch(e){
     R('h-sub').textContent='⚠ Erro: '+e.message;
