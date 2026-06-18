@@ -77,6 +77,18 @@
     .cv{color:var(--purple);} .cc{color:var(--cyan);} .cg{color:var(--green);}
     .co{color:var(--orange);} .cp{color:var(--pink);} .cy{color:var(--yellow);} .cb{color:var(--blue);}
 
+    /* TEMPERATURA */
+    .temp-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+    .temp-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:18px;}
+    .tc-hot{border-left:3px solid var(--orange);}
+    .tc-cold{border-left:3px solid var(--cyan);}
+    .temp-icon{font-size:32px;line-height:1;}
+    .temp-body{flex:1;}
+    .temp-title{font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
+    .temp-cpl{font-size:26px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;}
+    .temp-note{font-size:12px;color:var(--sub);margin-top:5px;}
+    .temp-pct{font-size:42px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-1px;text-align:right;min-width:90px;}
+
     .vg-bar{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 18px;margin-bottom:18px;font-size:12px;color:var(--sub);}
     .vg-bar strong{color:var(--text);}
 
@@ -223,6 +235,27 @@
     <div class="kpi k-green"><p class="kpi-lbl">CTR</p><p class="kpi-val cg" id="k-ctr">—</p><p class="kpi-note">taxa de clique</p></div>
     <div class="kpi k-purple"><p class="kpi-lbl">Leads Ads</p><p class="kpi-val cv" id="k-leads">—</p><p class="kpi-note" id="k-leads-note">captação paga</p></div>
     <div class="kpi k-pink"><p class="kpi-lbl">CPL</p><p class="kpi-val cp" id="k-cpl">—</p><p class="kpi-note">custo por lead</p></div>
+  </div>
+
+  <div class="temp-row">
+    <div class="temp-card tc-hot">
+      <div class="temp-icon">🔥</div>
+      <div class="temp-body">
+        <div class="temp-title">Público Quente</div>
+        <div class="temp-cpl co" id="t-cpl-q">—</div>
+        <div class="temp-note" id="t-note-q">CPL · leads do Meta</div>
+      </div>
+      <div class="temp-pct co" id="t-pct-q">—</div>
+    </div>
+    <div class="temp-card tc-cold">
+      <div class="temp-icon">❄️</div>
+      <div class="temp-body">
+        <div class="temp-title">Público Frio</div>
+        <div class="temp-cpl cc" id="t-cpl-f">—</div>
+        <div class="temp-note" id="t-note-f">CPL · leads do Meta</div>
+      </div>
+      <div class="temp-pct cc" id="t-pct-f">—</div>
+    </div>
   </div>
 
   <p class="sec-title">Performance Diária</p>
@@ -487,6 +520,27 @@ function renderAll(){
       yB:{position:'right',grid:{drawOnChartArea:false},ticks:{callback:v=>v.toFixed(2)+'%',color:C.green,font:{size:11}}},
     }
   }});
+
+  // ── Temperatura (quente _Q / frio _F) — vem direto do Meta ──
+  let invQ=0,invF=0,leadsMetaQ=0,leadsMetaF=0;
+  ads.forEach(r=>{
+    const camp=r['Campanha']||'';
+    const inv=money(r['Investido']);
+    const l=parseInt(r['Leads'])||0;
+    if(/[_-]Q\b/.test(camp)||camp.endsWith('_Q')){invQ+=inv;leadsMetaQ+=l;}
+    else if(/[_-]F\b/.test(camp)||camp.endsWith('_F')){invF+=inv;leadsMetaF+=l;}
+  });
+  const leadsMetaTot=leadsMetaQ+leadsMetaF;
+  const pctQ=leadsMetaTot>0?leadsMetaQ/leadsMetaTot*100:0;
+  const pctF=leadsMetaTot>0?leadsMetaF/leadsMetaTot*100:0;
+  const cplQ=leadsMetaQ>0?invQ/leadsMetaQ:0;
+  const cplF=leadsMetaF>0?invF/leadsMetaF:0;
+  R('t-cpl-q').textContent=leadsMetaQ>0?fmtR(cplQ):'—';
+  R('t-pct-q').textContent=pctQ>0?pctQ.toFixed(0)+'%':'—';
+  R('t-note-q').textContent=leadsMetaQ>0?`${leadsMetaQ} leads · ${fmtR(invQ)} investido`:'sem dados';
+  R('t-cpl-f').textContent=leadsMetaF>0?fmtR(cplF):'—';
+  R('t-pct-f').textContent=pctF>0?pctF.toFixed(0)+'%':'—';
+  R('t-note-f').textContent=leadsMetaF>0?`${leadsMetaF} leads · ${fmtR(invF)} investido`:'sem dados';
 
   // ── Tabela por criativo — investimento e cliques da aba ads; leads escalados ──
   const byCriat={};
