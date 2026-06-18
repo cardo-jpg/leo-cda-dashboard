@@ -56,13 +56,14 @@
     .gauge-pct{font-size:36px;font-weight:800;line-height:1;letter-spacing:-1.5px;}
     .gauge-tag{font-size:12px;color:var(--sub);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-top:3px;}
 
-    .gauge-footer{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;width:100%;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);}
-    .gauge-val-n{font-size:27px;font-weight:800;line-height:1;}
-    .gauge-val-lbl{font-size:12px;color:var(--sub);font-weight:600;text-transform:uppercase;margin-top:3px;}
-    .gauge-check{font-size:26px;text-align:center;}
-    .gauge-meta-txt{text-align:right;}
-    .gauge-meta-txt span{font-size:18px;font-weight:700;color:var(--sub);}
-    .gauge-meta-txt small{display:block;font-size:12px;color:var(--sub2);text-transform:uppercase;margin-top:3px;}
+    .gauge-range{display:flex;justify-content:space-between;font-size:13px;color:var(--sub);margin-top:10px;padding:0 4px;}
+    .gauge-range span:first-child{font-size:22px;font-weight:800;color:var(--text);}
+    .gauge-range span:last-child{font-size:13px;font-weight:600;align-self:center;}
+    .gauge-stats{display:flex;justify-content:center;gap:32px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);width:100%;}
+    .gauge-stats>div{text-align:center;}
+    .gauge-stats span{display:block;font-size:11px;color:var(--sub);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+    .gauge-stats strong{font-size:22px;font-weight:800;color:var(--text);}
+    .gauge-stats .pace-val{color:var(--yellow);}
 
     /* KPI CARDS */
     .kpi-row{display:flex;gap:12px;margin-bottom:24px;overflow-x:auto;padding-bottom:4px;}
@@ -168,10 +169,13 @@
           <div class="gauge-tag">atingido</div>
         </div>
       </div>
-      <div class="gauge-footer">
-        <div><div class="gauge-val-n cv" id="gn-geral">0</div><div class="gauge-val-lbl">Total</div></div>
-        <div class="gauge-check" id="gc-geral"></div>
-        <div class="gauge-meta-txt"><span id="gm-geral">3.000</span><small>Meta</small></div>
+      <div class="gauge-range">
+        <span class="cv" id="gn-geral">0</span>
+        <span>Meta: 3.000</span>
+      </div>
+      <div class="gauge-stats">
+        <div><span>Média/dia</span><strong id="gm-geral">—</strong></div>
+        <div><span>Meta/dia</span><strong class="pace-val" id="gp2-geral">—</strong></div>
       </div>
     </div>
 
@@ -184,10 +188,13 @@
           <div class="gauge-tag">atingido</div>
         </div>
       </div>
-      <div class="gauge-footer">
-        <div><div class="gauge-val-n co" id="gn-ads">0</div><div class="gauge-val-lbl">Leads Ads</div></div>
-        <div class="gauge-check" id="gc-ads"></div>
-        <div class="gauge-meta-txt"><span>1.800</span><small>Meta</small></div>
+      <div class="gauge-range">
+        <span class="co" id="gn-ads">0</span>
+        <span>Meta: 1.800</span>
+      </div>
+      <div class="gauge-stats">
+        <div><span>Média/dia</span><strong id="gm-ads">—</strong></div>
+        <div><span>Meta/dia</span><strong class="pace-val" id="gp2-ads">—</strong></div>
       </div>
     </div>
 
@@ -200,10 +207,13 @@
           <div class="gauge-tag">atingido</div>
         </div>
       </div>
-      <div class="gauge-footer">
-        <div><div class="gauge-val-n cg" id="gn-org">0</div><div class="gauge-val-lbl">Leads Org</div></div>
-        <div class="gauge-check" id="gc-org"></div>
-        <div class="gauge-meta-txt"><span>1.200</span><small>Meta</small></div>
+      <div class="gauge-range">
+        <span class="cg" id="gn-org">0</span>
+        <span>Meta: 1.200</span>
+      </div>
+      <div class="gauge-stats">
+        <div><span>Média/dia</span><strong id="gm-org">—</strong></div>
+        <div><span>Meta/dia</span><strong class="pace-val" id="gp2-org">—</strong></div>
       </div>
     </div>
 
@@ -216,10 +226,13 @@
           <div class="gauge-tag">utilizado</div>
         </div>
       </div>
-      <div class="gauge-footer">
-        <div><div class="gauge-val-n cy" id="gn-verb">R$ 0</div><div class="gauge-val-lbl">Investido</div></div>
-        <div class="gauge-check" id="gc-verb"></div>
-        <div class="gauge-meta-txt"><span>R$ 2.700</span><small>Verba</small></div>
+      <div class="gauge-range">
+        <span class="cy" id="gn-verb">R$ 0</span>
+        <span>Verba: R$ 2.700</span>
+      </div>
+      <div class="gauge-stats">
+        <div><span>Média/dia</span><strong id="gm-verb">—</strong></div>
+        <div><span>Meta/dia</span><strong class="pace-val" id="gp2-verb">—</strong></div>
       </div>
     </div>
 
@@ -315,6 +328,7 @@ const ADS_ID  = '1uSyHTXWefAnPdBxRD1yMgK0wMJJNms8SlRB3EzDD86o';
 const GVT_ADS = `https://docs.google.com/spreadsheets/d/${ADS_ID}/gviz/tq?tqx=out:csv&gid=0`;
 const GVT_LEADS = `https://docs.google.com/spreadsheets/d/${ADS_ID}/gviz/tq?tqx=out:csv&gid=1704118724`;
 const META_GERAL=3000, META_ADS=1800, META_ORG=1200, VERBA=2700;
+const CAMPAIGN_END=new Date(2026,5,30); // 30/jun/2026
 
 // ── UTILS ─────────────────────────────────────────────────────
 const C={cyan:'#00c6ff',green:'#00e5a0',yellow:'#ffd166',red:'#ff6b6b',purple:'#a78bfa',orange:'#f97316',pink:'#f472b6',blue:'#60a5fa',grid:'rgba(30,48,69,0.7)'};
@@ -350,13 +364,14 @@ function drawGauge(id,value,max,color){
   }]},options:{cutout:'58%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:900},events:[]}});
 }
 
+const fmtPace=v=>v<=0?'✓':v.toFixed(1);
+
 function updateGauge(prefix,value,max,color,fmtVal){
   const pct=value/max*100;
   drawGauge('g-'+prefix,value,max,color);
   R('gp-'+prefix).textContent=pct.toFixed(1).replace('.',',')+'%';
   R('gp-'+prefix).style.color=pct>=100?C.green:color;
   R('gn-'+prefix).textContent=fmtVal;
-  R('gc-'+prefix).textContent=pct>=100?'🏆':'';
 }
 
 // ── LEADS TAB (cumulativo — igual à dash da Pati) ─────────────
@@ -452,10 +467,26 @@ function renderAll(){
   R('k-cpl').textContent=filtLeadsAds>0?fmtR(cpl):'—';
 
   // ── Gauges — usam total acumulado da aba Leads (não filtrado por período) ──
-  updateGauge('geral',LEADS_ADS_TOTAL+LEADS_ORG_TOTAL,META_GERAL,C.purple,String(LEADS_ADS_TOTAL+LEADS_ORG_TOTAL));
+  const totLeadsGeral=LEADS_ADS_TOTAL+LEADS_ORG_TOTAL;
+  updateGauge('geral',totLeadsGeral,META_GERAL,C.purple,String(totLeadsGeral));
   updateGauge('ads',LEADS_ADS_TOTAL,META_ADS,C.orange,String(LEADS_ADS_TOTAL));
   updateGauge('org',LEADS_ORG_TOTAL,META_ORG,C.green,String(LEADS_ORG_TOTAL));
   updateGauge('verb',totInv,VERBA,C.yellow,fmtR(totInv));
+
+  // ── Média/dia e Meta/dia ──
+  const filtN=Math.max(1,days.length);
+  const daysLeft=Math.max(1,Math.ceil((CAMPAIGN_END-new Date())/86400000));
+  const setStats=(pfx,leadsTotal,meta,mediaVal)=>{
+    R('gm-'+pfx).textContent=mediaVal.toFixed(1);
+    R('gp2-'+pfx).textContent=fmtPace((meta-leadsTotal)/daysLeft);
+  };
+  // leads filtrados pelo período atual para média/dia
+  setStats('geral', totLeadsGeral, META_GERAL, (filtLeadsAds+filtLeadsOrg)/filtN);
+  setStats('ads',   LEADS_ADS_TOTAL, META_ADS, filtLeadsAds/filtN);
+  setStats('org',   LEADS_ORG_TOTAL, META_ORG, filtLeadsOrg/filtN);
+  // Orçamento: média R$/dia e ritmo de gasto
+  R('gm-verb').textContent='R$'+(totInv/filtN).toFixed(0);
+  R('gp2-verb').textContent=fmtPace((VERBA-totInv)/daysLeft);
 
   // ── Resumo ──
   R('r-cpl').textContent=filtLeadsAds>0?fmtR(cpl):'—';
