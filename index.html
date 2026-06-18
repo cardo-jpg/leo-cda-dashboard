@@ -484,9 +484,10 @@ function renderAll(){
   setStats('geral', totLeadsGeral, META_GERAL, (filtLeadsAds+filtLeadsOrg)/filtN);
   setStats('ads',   LEADS_ADS_TOTAL, META_ADS, filtLeadsAds/filtN);
   setStats('org',   LEADS_ORG_TOTAL, META_ORG, filtLeadsOrg/filtN);
-  // Orçamento: média R$/dia e ritmo de gasto
-  R('gm-verb').textContent='R$'+(totInv/filtN).toFixed(0);
-  R('gp2-verb').textContent=fmtPace((VERBA-totInv)/daysLeft);
+  // Orçamento: média R$/dia gasto · meta R$/dia restante
+  R('gm-verb').textContent='R$ '+(totInv/filtN).toFixed(0);
+  const verbRestante=(VERBA-totInv)/daysLeft;
+  R('gp2-verb').textContent=verbRestante>0?'R$ '+verbRestante.toFixed(0):'✓';
 
   // ── Resumo ──
   R('r-cpl').textContent=filtLeadsAds>0?fmtR(cpl):'—';
