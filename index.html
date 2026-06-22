@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard CDA · Léo Barbosa</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     :root {
@@ -135,9 +136,9 @@
     /* PESQUISA */
     .p-kpi-row{display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap;}
     .p-kpi{flex:1;min-width:150px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
-    .p-kpi-lbl{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
-    .p-kpi-val{font-size:32px;font-weight:800;line-height:1;white-space:nowrap;}
-    .p-kpi-note{font-size:12px;color:var(--sub);margin-top:5px;}
+    .p-kpi-lbl{font-size:14px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+    .p-kpi-val{font-size:42px;font-weight:800;line-height:1;white-space:nowrap;}
+    .p-kpi-note{font-size:15px;color:var(--text);opacity:.75;margin-top:5px;}
     .pk-p{border-top:2px solid var(--purple);} .pk-p .p-kpi-val{color:var(--purple);}
     .pk-c{border-top:2px solid var(--cyan);}   .pk-c .p-kpi-val{color:var(--cyan);}
     .pk-g{border-top:2px solid var(--green);}  .pk-g .p-kpi-val{color:var(--green);}
@@ -147,10 +148,13 @@
     .p-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
     .p-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;}
     .p-cbox{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;}
-    .p-ttl{font-size:14px;font-weight:700;margin-bottom:4px;}
-    .p-sub-lbl{font-size:12px;color:var(--sub);margin-bottom:18px;}
+    .p-ttl{font-size:18px;font-weight:700;margin-bottom:4px;}
+    .p-sub-lbl{font-size:15px;color:var(--text);opacity:.75;margin-bottom:18px;}
     .p-cw{position:relative;}
     .ph200{height:200px;} .ph260{height:260px;} .ph300{height:300px;} .ph360{height:360px;}
+    .wordcloud{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 16px;padding:20px 12px;min-height:220px;}
+    .wordcloud span{font-weight:800;cursor:default;transition:opacity .2s;line-height:1.4;}
+    .wordcloud span:hover{opacity:.55;}
 
     @media(max-width:1000px){
       .gauge-row{grid-template-columns:repeat(2,1fr);}
@@ -397,13 +401,13 @@
   <div class="p-grid-2">
     <div class="p-cbox">
       <p class="p-ttl">O que mais te impede de crescer?</p>
-      <p class="p-sub-lbl">Análise temática das respostas abertas</p>
-      <div class="p-cw ph300"><canvas id="pc-impede"></canvas></div>
+      <p class="p-sub-lbl">Análise temática · tamanho = frequência</p>
+      <div id="wc-impede" class="wordcloud"></div>
     </div>
     <div class="p-cbox">
       <p class="p-ttl">O que mais te frustra na carreira?</p>
-      <p class="p-sub-lbl">Análise temática das respostas abertas</p>
-      <div class="p-cw ph300"><canvas id="pc-frust"></canvas></div>
+      <p class="p-sub-lbl">Análise temática · tamanho = frequência</p>
+      <div id="wc-frust" class="wordcloud"></div>
     </div>
   </div>
 
@@ -741,12 +745,30 @@ function countCol(rows,partial){
   return c;
 }
 
+function buildWordCloud(id, words){
+  const colors=['#a78bfa','#c084fc','#e879f9','#f472b6','#fb7185','#f97316','#facc15','#22d3ee','#34d399','#60a5fa'];
+  const maxC=Math.max(...words.map(w=>w.c));
+  const el=R(id); if(!el) return; el.innerHTML='';
+  // Interleave biggest and smallest for natural scatter
+  const s=words.slice().sort((a,b)=>b.c-a.c);
+  const out=[];
+  for(let i=0,j=s.length-1;i<=j;){out.push(s[i++]);if(i<=j)out.push(s[j--]);}
+  out.forEach((w,i)=>{
+    const size=Math.round(18+(w.c/maxC)*26);
+    const sp=document.createElement('span');
+    sp.textContent=w.text;
+    sp.style.cssText=`font-size:${size}px;font-weight:800;color:${colors[i%colors.length]};padding:4px 10px;cursor:default;line-height:1.4;`;
+    sp.title=`${w.c} menções`;
+    el.appendChild(sp);
+  });
+}
+
 function renderPesquisa(rows){
   const total=rows.filter(r=>Object.values(r).some(v=>v.trim())).length;
-  const conhece  =countCol(rows,'quanto tempo você me conhece');
+  const conhece   =countCol(rows,'quanto tempo você me conhece');
   const unicaFonte=countCol(rows,'única fonte de renda');
   const experiencia=countCol(rows,'quanto tempo você trabalha');
-  const renda    =countCol(rows,'renda mensal');
+  const renda     =countCol(rows,'renda mensal');
 
   const outroTrab=unicaFonte['Não. Ainda tenho outro trabalho em paralelo.']||0;
   const simSo    =unicaFonte['Sim!']||0;
@@ -762,36 +784,55 @@ function renderPesquisa(rows){
   R('p-conh').textContent=conhTotal>0?((conhece['Mais de 1 ano']||0)/conhTotal*100).toFixed(0)+'%':'—';
 
   const PC=['#a78bfa','#c084fc','#e879f9','#f472b6','#fb7185','#f97316','#facc15','#22d3ee','#34d399'];
+  const DL=typeof ChartDataLabels!=='undefined'?[ChartDataLabels]:[];
+  const TXT='#f0f4f8';
 
-  const hbar=(labels,data,colors)=>({
-    type:'bar',
-    data:{labels,datasets:[{data,backgroundColor:colors||PC.slice(0,data.length),borderRadius:5,borderSkipped:false}]},
-    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.parsed.x+' respostas'}}},
-      scales:{
-        x:{grid:{color:C.grid},ticks:{font:{size:11}}},
-        y:{grid:{color:'transparent'},ticks:{font:{size:12}}}
+  const hbar=(labels,data,colors)=>{
+    const tot=data.reduce((a,b)=>a+b,0);
+    return {
+      type:'bar',
+      data:{labels,datasets:[{data,backgroundColor:colors||PC.slice(0,data.length),borderRadius:5,borderSkipped:false}]},
+      plugins:DL,
+      options:{
+        indexAxis:'y',responsive:true,maintainAspectRatio:false,
+        layout:{padding:{right:90}},
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label:c=>` ${c.parsed.x} · ${(c.parsed.x/tot*100).toFixed(0)}%`}},
+          datalabels:{color:TXT,anchor:'end',align:'right',font:{size:13,weight:'700'},
+            formatter:v=>tot>0?`${v} · ${(v/tot*100).toFixed(0)}%`:String(v)}
+        },
+        scales:{
+          x:{grid:{color:C.grid},ticks:{color:TXT,font:{size:14}}},
+          y:{grid:{color:'transparent'},ticks:{color:TXT,font:{size:15}}}
+        }
       }
-    }
-  });
+    };
+  };
 
-  const donut=(labels,data,colors)=>({
+  const pizza=(labels,data,colors)=>({
     type:'doughnut',
-    data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:2,borderColor:'#131f30'}]},
-    options:{cutout:'65%',responsive:true,maintainAspectRatio:false,
+    data:{labels,datasets:[{data,backgroundColor:colors||PC.slice(0,data.length),borderWidth:2,borderColor:'#131f30'}]},
+    plugins:DL,
+    options:{cutout:'50%',responsive:true,maintainAspectRatio:false,
       plugins:{
-        legend:{position:'bottom',labels:{boxWidth:12,padding:12,font:{size:12},usePointStyle:true}},
-        tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw} (${(c.raw/c.dataset.data.reduce((a,b)=>a+b,0)*100).toFixed(0)}%)`}}
+        legend:{position:'bottom',labels:{boxWidth:12,padding:14,font:{size:14},usePointStyle:true,color:TXT}},
+        tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw} (${(c.raw/c.dataset.data.reduce((a,b)=>a+b,0)*100).toFixed(0)}%)`}},
+        datalabels:{
+          color:'#fff',font:{size:14,weight:'bold'},
+          formatter:(v,ctx)=>{const t=ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0);return t>0?`${(v/t*100).toFixed(0)}%`:String(v);},
+          display:(ctx)=>{const t=ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0);return(ctx.dataset.data[ctx.dataIndex]/t)>0.06;}
+        }
       }
     }
   });
 
-  // Conhece
+  // Há quanto tempo me conhece → pizza
   const conhOrder=['Menos de 1 mês','Entre 1 e 3 meses','Entre 3 e 6 meses','Entre 6 meses e 1 ano','Mais de 1 ano'];
-  mkChart('pc-conhece',hbar(conhOrder,conhOrder.map(k=>conhece[k]||0)));
+  mkChart('pc-conhece',pizza(conhOrder,conhOrder.map(k=>conhece[k]||0)));
 
-  // Fonte de renda
-  mkChart('pc-fonte',donut(['Maquiagem = única renda','Tem outro trabalho'],[simSo,outroTrab],[C.purple,C.pink]));
+  // Fonte de renda → pizza
+  mkChart('pc-fonte',pizza(['Só maquiagem','Tem outro trabalho'],[simSo,outroTrab],[C.purple,C.pink]));
 
   // Experiência
   const expOrder=['Ainda estou começando','6 meses a 1 ano','Até 2 anos','Mais de 2 anos'];
@@ -801,25 +842,25 @@ function renderPesquisa(rows){
   const rendaOrder=['Até 2 mil reais','De 2 a 3 mil reais','De 3 a 5 mil reais','De 5 a 10 mil reais','De 10 a 15 mil reais','Mais de 15 mil reais'];
   mkChart('pc-renda',hbar(rendaOrder,rendaOrder.map(k=>renda[k]||0)));
 
-  // Impede (temático)
-  mkChart('pc-impede',hbar(
-    ['Insegurança/Confiança','Conhecimento/Técnica','Marketing/Social Media','Captação de Clientes','Limitações Financeiras','Gestão de Tempo','Localização','Espaço Profissional'],
-    [12,11,10,9,8,5,5,4]
-  ));
+  // Word clouds — Principais Desafios
+  buildWordCloud('wc-impede',[
+    {text:'Insegurança',c:12},{text:'Técnica',c:11},{text:'Marketing',c:10},
+    {text:'Captação',c:9},{text:'Financeiro',c:8},{text:'Tempo',c:5},
+    {text:'Localização',c:5},{text:'Espaço',c:4}
+  ]);
+  buildWordCloud('wc-frust',[
+    {text:'Reconhecimento',c:14},{text:'Qualidade',c:12},{text:'Poucos Clientes',c:11},
+    {text:'Foto/Conteúdo',c:8},{text:'Precificação',c:7},{text:'Posicionamento',c:6},
+    {text:'Desenvolvimento',c:5},{text:'Renda',c:4}
+  ]);
 
-  // Frustrações (temático)
-  mkChart('pc-frust',hbar(
-    ['Pouco Reconhecimento','Qualidade Técnica','Poucos Clientes','Foto/Conteúdo','Precificação Baixa','Posicionamento','Desenvolvimento','Renda Insuficiente'],
-    [14,12,11,8,7,6,5,4]
-  ));
-
-  // Técnica (temático)
+  // Técnica
   mkChart('pc-tec',hbar(
     ['Técnica de Olhos','Preparação de Pele','Acabamento/Sfumato','Delineado','Colorimetria','Sobrancelha','Durabilidade','Contorno Facial'],
     [28,16,13,8,7,4,4,3]
   ));
 
-  // Aspirações (temático)
+  // Aspirações
   mkChart('pc-asp',hbar(
     ['Ter Ateliê/Estúdio','Especializar em Noivas','Referência Profissional','Dar Cursos/Ensinar','Estabilidade Financeira','Trabalhar só com makeup','Expandir para outra Cidade'],
     [22,15,14,12,10,8,7]
