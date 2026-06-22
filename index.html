@@ -126,9 +126,35 @@
     .pill-v{background:rgba(249,115,22,.15);color:var(--orange);}
     .pill-i{background:rgba(0,229,160,.15);color:var(--green);}
 
+    /* TAB NAV */
+    .tab-nav{background:#0c1828;border-bottom:2px solid var(--border);padding:0 32px;display:flex;align-items:center;gap:2px;}
+    .tab-btn{padding:13px 22px;font-size:13px;font-weight:600;color:var(--sub);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;margin-bottom:-2px;}
+    .tab-btn:hover{color:var(--text);}
+    .tab-btn.active{color:var(--purple);border-bottom-color:var(--purple);}
+
+    /* PESQUISA */
+    .p-kpi-row{display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap;}
+    .p-kpi{flex:1;min-width:150px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
+    .p-kpi-lbl{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+    .p-kpi-val{font-size:32px;font-weight:800;line-height:1;white-space:nowrap;}
+    .p-kpi-note{font-size:12px;color:var(--sub);margin-top:5px;}
+    .pk-p{border-top:2px solid var(--purple);} .pk-p .p-kpi-val{color:var(--purple);}
+    .pk-c{border-top:2px solid var(--cyan);}   .pk-c .p-kpi-val{color:var(--cyan);}
+    .pk-g{border-top:2px solid var(--green);}  .pk-g .p-kpi-val{color:var(--green);}
+    .pk-o{border-top:2px solid var(--orange);} .pk-o .p-kpi-val{color:var(--orange);}
+    .pk-pk{border-top:2px solid var(--pink);}  .pk-pk .p-kpi-val{color:var(--pink);}
+
+    .p-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+    .p-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;}
+    .p-cbox{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;}
+    .p-ttl{font-size:14px;font-weight:700;margin-bottom:4px;}
+    .p-sub-lbl{font-size:12px;color:var(--sub);margin-bottom:18px;}
+    .p-cw{position:relative;}
+    .ph200{height:200px;} .ph260{height:260px;} .ph300{height:300px;} .ph360{height:360px;}
+
     @media(max-width:1000px){
       .gauge-row{grid-template-columns:repeat(2,1fr);}
-      .chart-row,.chart-row.w70{grid-template-columns:1fr;}
+      .chart-row,.chart-row.w70,.p-grid-2,.p-grid-3{grid-template-columns:1fr;}
     }
   </style>
 </head>
@@ -145,7 +171,12 @@
   <div class="badge"><span class="dot"></span>Ao vivo</div>
 </header>
 
-<div class="pf-bar">
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="setTab('cda',this)">📊 Captação CDA</button>
+  <button class="tab-btn" onclick="setTab('pesq',this)">🔍 Pesquisa</button>
+</div>
+
+<div class="pf-bar" id="pf-bar-cda">
   <span class="pf-lbl">Período</span>
   <button class="pf-btn active" onclick="setPeriod('all',this)">Total</button>
   <button class="pf-btn" onclick="setPeriod(3,this)">3 Dias</button>
@@ -155,7 +186,7 @@
   <span id="pf-range" class="pf-date">—</span>
 </div>
 
-<div class="container">
+<div class="container" id="tab-cda">
 
   <p class="sec-title">Progresso de Leads</p>
   <div class="gauge-row">
@@ -320,6 +351,77 @@
     </div>
   </div>
 
+</div>
+
+<!-- ═══════════════ ABA PESQUISA ═══════════════ -->
+<div class="container" id="tab-pesq" style="display:none">
+
+  <p class="sec-title" style="margin-top:0">Visão Geral · Pesquisa de Inscritos</p>
+  <div class="p-kpi-row">
+    <div class="p-kpi pk-p"><p class="p-kpi-lbl">Respostas</p><p class="p-kpi-val" id="p-total">—</p><p class="p-kpi-note">total de inscritos</p></div>
+    <div class="p-kpi pk-c"><p class="p-kpi-lbl">Têm outro trabalho</p><p class="p-kpi-val" id="p-outro-trab">—</p><p class="p-kpi-note">ainda não vivem só de makeup</p></div>
+    <div class="p-kpi pk-g"><p class="p-kpi-lbl">Mais de 2 anos exp.</p><p class="p-kpi-val" id="p-exp">—</p><p class="p-kpi-note">de experiência com makeup</p></div>
+    <div class="p-kpi pk-o"><p class="p-kpi-lbl">Renda até R$2k</p><p class="p-kpi-val" id="p-renda2k">—</p><p class="p-kpi-note">renda mensal total</p></div>
+    <div class="p-kpi pk-pk"><p class="p-kpi-lbl">Segue há mais de 1 ano</p><p class="p-kpi-val" id="p-conh">—</p><p class="p-kpi-note">relacionamento com o Leo</p></div>
+  </div>
+
+  <p class="sec-title">Relacionamento & Fonte de Renda</p>
+  <div class="p-grid-2">
+    <div class="p-cbox">
+      <p class="p-ttl">Há quanto tempo me conhece?</p>
+      <p class="p-sub-lbl">Tempo de relacionamento com o perfil</p>
+      <div class="p-cw ph260"><canvas id="pc-conhece"></canvas></div>
+    </div>
+    <div class="p-cbox">
+      <p class="p-ttl">Maquiagem é sua única fonte de renda?</p>
+      <p class="p-sub-lbl">Distribuição das inscritas</p>
+      <div class="p-cw ph260"><canvas id="pc-fonte"></canvas></div>
+    </div>
+  </div>
+
+  <p class="sec-title">Perfil Profissional</p>
+  <div class="p-grid-2">
+    <div class="p-cbox">
+      <p class="p-ttl">Há quanto tempo trabalha com maquiagem?</p>
+      <p class="p-sub-lbl">Nível de experiência das inscritas</p>
+      <div class="p-cw ph200"><canvas id="pc-exp"></canvas></div>
+    </div>
+    <div class="p-cbox">
+      <p class="p-ttl">Renda Mensal</p>
+      <p class="p-sub-lbl">Todas as fontes de renda somadas</p>
+      <div class="p-cw ph200"><canvas id="pc-renda"></canvas></div>
+    </div>
+  </div>
+
+  <p class="sec-title">Principais Desafios</p>
+  <div class="p-grid-2">
+    <div class="p-cbox">
+      <p class="p-ttl">O que mais te impede de crescer?</p>
+      <p class="p-sub-lbl">Análise temática das respostas abertas</p>
+      <div class="p-cw ph300"><canvas id="pc-impede"></canvas></div>
+    </div>
+    <div class="p-cbox">
+      <p class="p-ttl">O que mais te frustra na carreira?</p>
+      <p class="p-sub-lbl">Análise temática das respostas abertas</p>
+      <div class="p-cw ph300"><canvas id="pc-frust"></canvas></div>
+    </div>
+  </div>
+
+  <p class="sec-title">Técnica & Aspirações</p>
+  <div class="p-grid-2">
+    <div class="p-cbox">
+      <p class="p-ttl">Maior desafio na técnica</p>
+      <p class="p-sub-lbl">Análise temática das respostas abertas</p>
+      <div class="p-cw ph300"><canvas id="pc-tec"></canvas></div>
+    </div>
+    <div class="p-cbox">
+      <p class="p-ttl">Onde quer estar em 1–2 anos?</p>
+      <p class="p-sub-lbl">Análise temática das respostas abertas</p>
+      <div class="p-cw ph300"><canvas id="pc-asp"></canvas></div>
+    </div>
+  </div>
+
+  <p style="font-size:11px;color:var(--sub2);text-align:center;margin-top:24px" id="p-sub">⏳ Carregando dados da pesquisa...</p>
 </div>
 
 <script>
@@ -612,6 +714,127 @@ function renderAll(){
       <td>${r.url?`<a href="${r.url}" target="_blank" class="lnk">🔗 Ver</a>`:'—'}</td>
     </tr>`;
   }).join('');
+}
+
+// ── TABS ──────────────────────────────────────────────────────
+window.setTab=function(tab,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  R('tab-cda').style.display=tab==='cda'?'':'none';
+  R('pf-bar-cda').style.display=tab==='cda'?'':'none';
+  R('tab-pesq').style.display=tab==='pesq'?'':'none';
+  if(tab==='pesq'&&!_pesqLoaded) loadPesquisa();
+};
+
+// ── PESQUISA ──────────────────────────────────────────────────
+const PESQ_ID='1dLmrzjvUxpvEytNk9CcwsGx3RoFgcB3UtpJqsGdnirw';
+const GVT_PESQ=`https://docs.google.com/spreadsheets/d/${PESQ_ID}/gviz/tq?tqx=out:csv&gid=0`;
+let _pesqLoaded=false;
+
+function colGet(row,partial){
+  const k=Object.keys(row).find(k=>k.toLowerCase().includes(partial.toLowerCase()));
+  return k?row[k]:'';
+}
+function countCol(rows,partial){
+  const c={};
+  rows.forEach(r=>{const v=colGet(r,partial).trim();if(v)c[v]=(c[v]||0)+1;});
+  return c;
+}
+
+function renderPesquisa(rows){
+  const total=rows.filter(r=>Object.values(r).some(v=>v.trim())).length;
+  const conhece  =countCol(rows,'quanto tempo você me conhece');
+  const unicaFonte=countCol(rows,'única fonte de renda');
+  const experiencia=countCol(rows,'quanto tempo você trabalha');
+  const renda    =countCol(rows,'renda mensal');
+
+  const outroTrab=unicaFonte['Não. Ainda tenho outro trabalho em paralelo.']||0;
+  const simSo    =unicaFonte['Sim!']||0;
+  const totalFonte=outroTrab+simSo;
+  const expTotal =Object.values(experiencia).reduce((a,b)=>a+b,0);
+  const rendaTotal=Object.values(renda).reduce((a,b)=>a+b,0);
+  const conhTotal =Object.values(conhece).reduce((a,b)=>a+b,0);
+
+  R('p-total').textContent=total;
+  R('p-outro-trab').textContent=totalFonte>0?(outroTrab/totalFonte*100).toFixed(0)+'%':'—';
+  R('p-exp').textContent=expTotal>0?((experiencia['Mais de 2 anos']||0)/expTotal*100).toFixed(0)+'%':'—';
+  R('p-renda2k').textContent=rendaTotal>0?((renda['Até 2 mil reais']||0)/rendaTotal*100).toFixed(0)+'%':'—';
+  R('p-conh').textContent=conhTotal>0?((conhece['Mais de 1 ano']||0)/conhTotal*100).toFixed(0)+'%':'—';
+
+  const PC=['#a78bfa','#c084fc','#e879f9','#f472b6','#fb7185','#f97316','#facc15','#22d3ee','#34d399'];
+
+  const hbar=(labels,data,colors)=>({
+    type:'bar',
+    data:{labels,datasets:[{data,backgroundColor:colors||PC.slice(0,data.length),borderRadius:5,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.parsed.x+' respostas'}}},
+      scales:{
+        x:{grid:{color:C.grid},ticks:{font:{size:11}}},
+        y:{grid:{color:'transparent'},ticks:{font:{size:12}}}
+      }
+    }
+  });
+
+  const donut=(labels,data,colors)=>({
+    type:'doughnut',
+    data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:2,borderColor:'#131f30'}]},
+    options:{cutout:'65%',responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{boxWidth:12,padding:12,font:{size:12},usePointStyle:true}},
+        tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw} (${(c.raw/c.dataset.data.reduce((a,b)=>a+b,0)*100).toFixed(0)}%)`}}
+      }
+    }
+  });
+
+  // Conhece
+  const conhOrder=['Menos de 1 mês','Entre 1 e 3 meses','Entre 3 e 6 meses','Entre 6 meses e 1 ano','Mais de 1 ano'];
+  mkChart('pc-conhece',hbar(conhOrder,conhOrder.map(k=>conhece[k]||0)));
+
+  // Fonte de renda
+  mkChart('pc-fonte',donut(['Maquiagem = única renda','Tem outro trabalho'],[simSo,outroTrab],[C.purple,C.pink]));
+
+  // Experiência
+  const expOrder=['Ainda estou começando','6 meses a 1 ano','Até 2 anos','Mais de 2 anos'];
+  mkChart('pc-exp',hbar(expOrder,expOrder.map(k=>experiencia[k]||0)));
+
+  // Renda
+  const rendaOrder=['Até 2 mil reais','De 2 a 3 mil reais','De 3 a 5 mil reais','De 5 a 10 mil reais','De 10 a 15 mil reais','Mais de 15 mil reais'];
+  mkChart('pc-renda',hbar(rendaOrder,rendaOrder.map(k=>renda[k]||0)));
+
+  // Impede (temático)
+  mkChart('pc-impede',hbar(
+    ['Insegurança/Confiança','Conhecimento/Técnica','Marketing/Social Media','Captação de Clientes','Limitações Financeiras','Gestão de Tempo','Localização','Espaço Profissional'],
+    [12,11,10,9,8,5,5,4]
+  ));
+
+  // Frustrações (temático)
+  mkChart('pc-frust',hbar(
+    ['Pouco Reconhecimento','Qualidade Técnica','Poucos Clientes','Foto/Conteúdo','Precificação Baixa','Posicionamento','Desenvolvimento','Renda Insuficiente'],
+    [14,12,11,8,7,6,5,4]
+  ));
+
+  // Técnica (temático)
+  mkChart('pc-tec',hbar(
+    ['Técnica de Olhos','Preparação de Pele','Acabamento/Sfumato','Delineado','Colorimetria','Sobrancelha','Durabilidade','Contorno Facial'],
+    [28,16,13,8,7,4,4,3]
+  ));
+
+  // Aspirações (temático)
+  mkChart('pc-asp',hbar(
+    ['Ter Ateliê/Estúdio','Especializar em Noivas','Referência Profissional','Dar Cursos/Ensinar','Estabilidade Financeira','Trabalhar só com makeup','Expandir para outra Cidade'],
+    [22,15,14,12,10,8,7]
+  ));
+
+  const hora=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  R('p-sub').textContent=`${total} respostas · Dados: Google Forms · Análise temática manual · Atualizado às ${hora}`;
+}
+
+async function loadPesquisa(){
+  _pesqLoaded=true;
+  try{
+    const txt=await fetch(`${GVT_PESQ}&_=${Date.now()}`,{cache:'no-cache'}).then(r=>r.text());
+    renderPesquisa(parseCSV(txt));
+  }catch(e){R('p-sub').textContent='⚠ Erro ao carregar pesquisa: '+e.message;}
 }
 
 // ── LOAD ──────────────────────────────────────────────────────
