@@ -119,6 +119,11 @@
     td{padding:11px 16px;font-size:13px;border-top:1px solid var(--border);white-space:nowrap;}
     tr:hover td{background:rgba(255,255,255,.025);}
     .tr{text-align:right;}
+    th.sortable{cursor:pointer;user-select:none;transition:color .15s;}
+    th.sortable:hover{color:var(--text);}
+    th .arr{font-size:9px;margin-left:4px;opacity:.3;}
+    th.sort-active{color:var(--purple);}
+    th.sort-active .arr{opacity:1;color:var(--purple);}
     .lnk{color:var(--cyan);font-size:12px;text-decoration:none;}
     .lnk:hover{text-decoration:underline;}
     .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
@@ -345,10 +350,16 @@
     <div class="tbl-scroll">
       <table>
         <thead><tr>
-          <th>Criativo</th><th>Público</th><th>Campanha</th>
-          <th class="tr">Investido</th><th class="tr">Impressões</th>
-          <th class="tr">Cliques</th><th class="tr">CTR</th>
-          <th class="tr">Leads</th><th class="tr">CPL</th><th>Anúncio</th>
+          <th class="sortable" data-key="criativo" onclick="sortTable('criativo')">Criativo<span class="arr"></span></th>
+          <th class="sortable" data-key="publico" onclick="sortTable('publico')">Público<span class="arr"></span></th>
+          <th class="sortable" data-key="campanha" onclick="sortTable('campanha')">Campanha<span class="arr"></span></th>
+          <th class="tr sortable" data-key="inv" onclick="sortTable('inv')">Investido<span class="arr"></span></th>
+          <th class="tr sortable" data-key="imp" onclick="sortTable('imp')">Impressões<span class="arr"></span></th>
+          <th class="tr sortable" data-key="clk" onclick="sortTable('clk')">Cliques<span class="arr"></span></th>
+          <th class="tr sortable" data-key="ctr" onclick="sortTable('ctr')">CTR<span class="arr"></span></th>
+          <th class="tr sortable" data-key="leads" onclick="sortTable('leads')">Leads<span class="arr"></span></th>
+          <th class="tr sortable" data-key="cpl" onclick="sortTable('cpl')">CPL<span class="arr"></span></th>
+          <th>Anúncio</th>
         </tr></thead>
         <tbody id="c-tbody"></tbody>
       </table>
@@ -694,30 +705,55 @@ function renderAll(){
   const metaTotLeads=Object.values(byCriat).reduce((s,r)=>s+r.leadsAds,0);
   Object.values(byCriat).forEach(r=>{
     r.leads=metaTotLeads>0&&filtLeadsAds>0?Math.round(r.leadsAds/metaTotLeads*filtLeadsAds):r.leadsAds;
+    r.ctr=r.imp>0?r.clk/r.imp*100:0;
+    r.cpl=r.leads>0?r.inv/r.leads:0;
   });
 
+  _criatData=Object.values(byCriat);
+  renderCriatTable();
+}
+
+// ── TABELA POR CRIATIVO (ordenável) ───────────────────────────
+let _criatData=[], _sortKey='leads', _sortDir=-1; // -1 = desc, 1 = asc
+const _txtCols=new Set(['criativo','publico','campanha']);
+
+window.sortTable=function(key){
+  if(_sortKey===key){_sortDir*=-1;}
+  else{_sortKey=key; _sortDir=_txtCols.has(key)?1:-1;} // texto começa A→Z, número começa maior→menor
+  renderCriatTable();
+};
+
+function renderCriatTable(){
   const campPill=c=>c.includes('_Q')?'<span class="pill pill-q">Q</span>':c.includes('_F')?'<span class="pill pill-f">F</span>':'';
   const pubPill=p=>(p.includes('Video')||p.includes('VID'))?'<span class="pill pill-v">Vídeo</span>':'<span class="pill pill-i">Img</span>';
   const cleanCriat=s=>s.replace(/^AD\d+_(IMG_|VID_)?/,'').replace(/_/g,' ');
   const cleanCamp=s=>s.replace(/^CDA_FB\d+_/,'').replace(/_/g,' ');
 
-  const criatRows=Object.values(byCriat).sort((a,b)=>b.leads-a.leads);
-  R('c-tbody').innerHTML=criatRows.map(r=>{
-    const ctr=r.imp>0?r.clk/r.imp*100:0;
-    const cpl=r.leads>0?r.inv/r.leads:0;
-    return`<tr>
+  const rows=_criatData.slice().sort((a,b)=>{
+    const av=a[_sortKey], bv=b[_sortKey];
+    if(_txtCols.has(_sortKey)) return _sortDir*String(av||'').localeCompare(String(bv||''),'pt-BR');
+    return _sortDir*((+av||0)-(+bv||0));
+  });
+
+  // indicadores de seta no cabeçalho
+  document.querySelectorAll('th.sortable').forEach(th=>{
+    const k=th.getAttribute('data-key'), arr=th.querySelector('.arr');
+    if(k===_sortKey){th.classList.add('sort-active'); arr.textContent=_sortDir<0?'▼':'▲';}
+    else{th.classList.remove('sort-active'); arr.textContent='';}
+  });
+
+  R('c-tbody').innerHTML=rows.map(r=>`<tr>
       <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis" title="${r.criativo}">${pubPill(r.publico)} ${cleanCriat(r.criativo)}</td>
       <td style="color:var(--sub);font-size:12px">${r.publico||'—'}</td>
       <td>${campPill(r.campanha)} <span style="font-size:12px">${cleanCamp(r.campanha)}</span></td>
       <td class="tr" style="color:var(--orange)">${fmtR(r.inv)}</td>
       <td class="tr" style="color:var(--sub)">${fmtN(r.imp)}</td>
       <td class="tr">${r.clk||'—'}</td>
-      <td class="tr" style="color:${ctr>3?C.green:ctr>1?C.yellow:C.red}">${fmtPct(ctr)}</td>
+      <td class="tr" style="color:${r.ctr>3?C.green:r.ctr>1?C.yellow:C.red}">${fmtPct(r.ctr)}</td>
       <td class="tr" style="color:var(--purple);font-weight:700;font-size:14px">${r.leads||'—'}</td>
-      <td class="tr" style="color:var(--pink)">${r.leads>0?fmtR(cpl):'—'}</td>
+      <td class="tr" style="color:var(--pink)">${r.leads>0?fmtR(r.cpl):'—'}</td>
       <td>${r.url?`<a href="${r.url}" target="_blank" class="lnk">🔗 Ver</a>`:'—'}</td>
-    </tr>`;
-  }).join('');
+    </tr>`).join('');
 }
 
 // ── TABS ──────────────────────────────────────────────────────
