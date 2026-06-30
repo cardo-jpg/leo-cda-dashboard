@@ -288,6 +288,7 @@
     <div class="kpi k-green"><p class="kpi-lbl">CTR</p><p class="kpi-val cg" id="k-ctr">—</p><p class="kpi-note">taxa de clique</p></div>
     <div class="kpi k-purple"><p class="kpi-lbl">Leads Ads</p><p class="kpi-val cv" id="k-leads">—</p><p class="kpi-note" id="k-leads-note">captação paga</p></div>
     <div class="kpi k-pink"><p class="kpi-lbl">CPL</p><p class="kpi-val cp" id="k-cpl">—</p><p class="kpi-note">custo por lead</p></div>
+    <div class="kpi k-green"><p class="kpi-lbl">Conversão</p><p class="kpi-val cg" id="k-cvr">—</p><p class="kpi-note">cliques que viram lead</p></div>
   </div>
 
   <div class="temp-row">
@@ -582,6 +583,7 @@ function renderAll(){
   R('k-leads').textContent=filtLeadsAds||'—';
   R('k-leads-note').textContent=filtLeadsOrg>0?`+${filtLeadsOrg} orgânicos`:'aba Leads';
   R('k-cpl').textContent=filtLeadsAds>0?fmtR(cpl):'—';
+  R('k-cvr').textContent=filtLeadsAds>0?fmtPct(cvr):'—';
 
   // ── Gauges — usam total acumulado da aba Leads (não filtrado por período) ──
   const totLeadsGeral=LEADS_ADS_TOTAL+LEADS_ORG_TOTAL;
